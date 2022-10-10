@@ -25,12 +25,10 @@ public class Controller {
 
     @ApiOperation("Get all sets of data.")
     @GetMapping(path = "/{size}/{par}/{inst}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Project> getProject(@ApiParam(value = "File: j{size}1_1", example = "120")
-                                              @PathVariable Integer size,
-                                              @ApiParam(value = "File: j120{par}_1", example = "1")
-                                              @PathVariable Integer par,
-                                              @ApiParam(value = "File: j1201_{inst}", example = "1")
-                                              @PathVariable Integer inst) {
+    public ResponseEntity<Project> getProject(
+            @ApiParam(value = "File: j{size}1_1", example = "120") @PathVariable Integer size,
+            @ApiParam(value = "File: j120{par}_1", example = "1") @PathVariable Integer par,
+            @ApiParam(value = "File: j1201_{inst}", example = "1") @PathVariable Integer inst) {
         return ResponseEntity.ok(null);
     }
 
