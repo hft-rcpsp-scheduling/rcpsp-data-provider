@@ -14,7 +14,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @Api(tags = "Data Provider")
 @RestController
-@RequestMapping("/provider")
+@RequestMapping("/api/provider")
 public class Controller {
 
     @ApiOperation("Get all sets of data.")
