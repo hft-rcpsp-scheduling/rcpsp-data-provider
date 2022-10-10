@@ -1,7 +1,7 @@
 package com.hft.provider.controller;
 
+import com.hft.provider.controller.model.Feedback;
 import com.hft.provider.controller.model.Project;
-import com.hft.provider.controller.model.ValidationResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -36,7 +36,7 @@ public class Controller {
 
     @ApiOperation("Evaluate feasibility of solution.")
     @PostMapping(path = "/validate", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ValidationResponse> validate(@RequestBody Project project) {
+    public ResponseEntity<List<Feedback>> validate(@RequestBody List<Project> solutions) {
         return ResponseEntity.ok(null);
     }
 }
