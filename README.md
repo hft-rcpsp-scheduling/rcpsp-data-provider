@@ -24,8 +24,12 @@ algorithm implementations and defines the input- and output-format.
 
 * [Dockerfile](Dockerfile)
 * Uses production profile: [application-prod.properties](src/main/resources/application-prod.properties)
-* Build command: `docker build -t data-provider .`
-* Run command: `docker run -d -p 8080:8080 --name provider-app data-provider`
+* Local image:
+  * Build command: `docker build -t data-provider .`
+  * Run command: `docker run -d -p 8080:8080 --name provider-app data-provider`
+* Latest release image:
+  * Pull command: `docker pull ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest`
+  * Run command: `docker run -d -p 8080:8080 --name provider-app ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest`
 
 ## System Requirements
 
