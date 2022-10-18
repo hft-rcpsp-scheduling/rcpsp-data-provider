@@ -3,16 +3,17 @@ package com.hft.provider.file;
 import com.hft.provider.controller.model.Job;
 import com.hft.provider.controller.model.Project;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
 public class ProjectReader extends FileReader {
-
     private final static String PROJECT_PATH = "projects/";
 
-    protected List<String> getAllFilePaths() throws IOException {
+    /**
+     * @return list with full paths of files in the project directory
+     * @throws IOException if input stream is null
+     */
+    public List<String> getAllFilePaths() throws IOException {
         List<String> paths = new ArrayList<>();
         List<String> sizeDirs = getDirectoryPaths(PROJECT_PATH);
         for (String directory : sizeDirs) {
@@ -21,9 +22,15 @@ public class ProjectReader extends FileReader {
         return paths;
     }
 
-    public Project parseFile(File file) throws FileNotFoundException {
-        String fileName = file.getName();
-        Scanner fileScanner = new Scanner(file);
+    /**
+     * @param resourceFilePath path within the resource directory (example: directory/file.txt)
+     * @return project with all available properties from file
+     * @throws IOException if input stream is null
+     */
+    public Project parseProject(String resourceFilePath) throws IOException {
+        String fileName = extractFileName(resourceFilePath);
+        Scanner fileScanner = new Scanner(getResourceReader(resourceFilePath));
+
         Project project = new Project();
         Map<Integer, Job> jobs = new HashMap<>();
 
@@ -42,15 +49,16 @@ public class ProjectReader extends FileReader {
                 case INFORMATION:
                     if (line.startsWith("jobs")) {
                         String[] split = line.split(":");
-                        project.setJobCount(Integer.parseInt(split[1])); // jobs
+                        project.setJobCount(Integer.parseInt(split[1].replaceAll(" ", ""))); // jobs
                     }
                     if (line.startsWith("horizon")) {
                         String[] split = line.split(":");
-                        project.setHorizon(Integer.parseInt(split[1])); // horizon
+                        project.setHorizon(Integer.parseInt(split[1].replaceAll(" ", ""))); // horizon
                     }
                     break;
                 case RELATIONS:
-                    if (!line.startsWith(" ")) continue;
+                    if (lineStartsNotWithNumber(line))
+                        continue;
                     job = new Job();
                     job.setNr(lineScanner.nextInt()); // jobnr.
                     lineScanner.next(); // #modes
@@ -64,6 +72,8 @@ public class ProjectReader extends FileReader {
                     jobs.put(job.getNr(), job);
                     break;
                 case DURATIONS:
+                    if (lineStartsNotWithNumber(line))
+                        continue;
                     job = jobs.get(lineScanner.nextInt()); // jobnr.
                     job.setMode(lineScanner.nextInt()); // mode
                     job.setDurationDays(lineScanner.nextInt()); // duration
@@ -73,6 +83,8 @@ public class ProjectReader extends FileReader {
                     job.setR4HoursPerDay(lineScanner.nextInt()); // R4
                     break;
                 case RESOURCE:
+                    if (lineStartsNotWithNumber(line))
+                        continue;
                     project.setR1CapacityPerDay(lineScanner.nextInt()); // R1
                     project.setR2CapacityPerDay(lineScanner.nextInt()); // R2
                     project.setR3CapacityPerDay(lineScanner.nextInt()); // R3
@@ -91,10 +103,12 @@ public class ProjectReader extends FileReader {
         return project;
     }
 
+    private boolean lineStartsNotWithNumber(String line) {
+        return !Character.isDigit(line.replaceAll(" ", "").charAt(0));
+    }
 
     private ScanningState identifyScanningState(ScanningState currentState, String line) {
         return switch (currentState) {
-            //TODO fill conditions
             case STARTED -> line.startsWith("jobs") ? ScanningState.INFORMATION : ScanningState.STARTED;
             case INFORMATION -> line.startsWith("jobnr.") ? ScanningState.RELATIONS : ScanningState.INFORMATION;
             case RELATIONS -> line.startsWith("REQUESTS/DURATIONS") ? ScanningState.DURATIONS : ScanningState.RELATIONS;
@@ -105,9 +119,29 @@ public class ProjectReader extends FileReader {
         };
     }
 
+    /**
+     * @param jobs map with empty predecessor fields (successors required)
+     * @return map values with filled predecessor fields
+     */
     private List<Job> processPredecessors(Map<Integer, Job> jobs) {
-        // TODO precess predecessor fields
+        for (Job job : jobs.values()) {
+            for (int successorNr : job.getSuccessors()) {
+                Job successor = jobs.get(successorNr);
+                successor.getPredecessors().add(job.getNr());
+                successor.setPredecessorCount(successor.getPredecessorCount() + 1);
+                jobs.put(successorNr, successor);
+            }
+        }
         return new ArrayList<>(jobs.values());
+    }
+
+    /**
+     * @param path full path with '/' divided
+     * @return last part of the path as file name
+     */
+    private String extractFileName(String path) {
+        String[] pathSplit = path.split("/");
+        return pathSplit[pathSplit.length - 1];
     }
 
     /**

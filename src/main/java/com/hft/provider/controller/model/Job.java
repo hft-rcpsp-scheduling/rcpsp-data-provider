@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ApiModel
@@ -16,13 +17,13 @@ public class Job {
     private int nr;
     // precedence relations
     @ApiModelProperty(value = "Defined count of successors", example = "2")
-    private int successorCount;
+    private int successorCount = 0;
     @ApiModelProperty(value = "Defined successor job numbers", example = "[4,5]")
-    private List<Integer> successors;
+    private List<Integer> successors = new ArrayList<>();
     @ApiModelProperty(value = "Calculated count of predecessors", example = "2")
-    private int predecessorCount;
+    private int predecessorCount = 0;
     @ApiModelProperty(value = "Calculated predecessor job numbers", example = "[1,2]")
-    private List<Integer> predecessors;
+    private List<Integer> predecessors = new ArrayList<>();
     // requests and durations
     @ApiModelProperty(value = "Defined mode with unknown usage", example = "1")
     private int mode;
