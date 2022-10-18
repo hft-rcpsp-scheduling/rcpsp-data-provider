@@ -31,6 +31,23 @@ algorithm implementations and defines the input- and output-format.
   * Pull command: `docker pull ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest`
   * Run command: `docker run -d -p 8080:8080 --name provider-app ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest`
 
+## Deployment
+
+* register at the bwCloud https://login.bwidm.de/ 
+* login at https://portal.bw-cloud.org/project/
+  * create new volume
+  * create new instance (Ubuntu) 
+    * select the new volume
+    * add your ssh public key
+  * add new port rules under security groups
+    * egress TCP port 80
+    * ingres TCP port 80
+* login via ssh using the ip like so 
+```shell
+ssh ubuntu@193.196.52.129
+```
+  
+
 ## System Requirements
 
 <details>
