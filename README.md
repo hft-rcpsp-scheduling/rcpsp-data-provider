@@ -46,7 +46,29 @@ algorithm implementations and defines the input- and output-format.
 ```shell
 ssh ubuntu@193.196.52.129
 ```
-  
+* update the Server
+```shell
+sudo apt-get update
+sudo apt-get upgrade
+```
+* install Docker
+```shell
+sudo apt install docker.io
+sudo systemctl start docker
+sudo systemctl enable 
+sudo groupadd docker
+sudo usermod -aG docker ${USER}
+```
+* pull docker image from repository
+```shell
+sudo docker pull ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest
+sudo docker run -d -p 80:8080 --name provider-app ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest
+```
+* check configuration for Program name: docker-proxy with the Local Address 0.0.0.0:80
+```shell
+sudo apt install net-tools
+sudo netstat -plnut
+```
 
 ## System Requirements
 
