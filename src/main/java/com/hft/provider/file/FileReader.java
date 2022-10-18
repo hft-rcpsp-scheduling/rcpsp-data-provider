@@ -10,6 +10,8 @@ import java.util.List;
 public class FileReader {
 
     /**
+     * Note: Don't forget to close the reader.
+     *
      * @param resourcePath path within the resource directory (example: directory/file.txt)
      * @return reader of input stream
      * @throws IOException if input stream is null

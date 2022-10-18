@@ -31,77 +31,80 @@ public class ProjectReader extends FileReader {
      */
     public Project parseProject(String resourceFilePath) throws IOException {
         String fileName = extractFileName(resourceFilePath);
-        Scanner fileScanner = new Scanner(getResourceReader(resourceFilePath));
 
         Project project = new Project();
-        Map<Integer, Job> jobs = new HashMap<>();
-
         project.setSize(extractSize(fileName)); // j{size}1_1
         project.setPar(extractPar(fileName, project.getSize())); // j120{par}_1
         project.setInst(extractInst(fileName)); // j1201_{inst}
 
-        ScanningState state = ScanningState.STARTED;
-        while (fileScanner.hasNext()) {
-            String line = fileScanner.nextLine();
-            if (line.equals("")) continue;
-            state = identifyScanningState(state, line);
-            Scanner lineScanner = new Scanner(line);
-            Job job;
-            switch (state) {
-                case INFORMATION:
-                    if (line.startsWith("jobs")) {
-                        String[] split = line.split(":");
-                        project.setJobCount(Integer.parseInt(split[1].replaceAll(" ", ""))); // jobs
-                    }
-                    if (line.startsWith("horizon")) {
-                        String[] split = line.split(":");
-                        project.setHorizon(Integer.parseInt(split[1].replaceAll(" ", ""))); // horizon
-                    }
-                    break;
-                case RELATIONS:
-                    if (lineStartsNotWithNumber(line))
-                        continue;
-                    job = new Job();
-                    job.setNr(lineScanner.nextInt()); // jobnr.
-                    lineScanner.next(); // #modes
-                    job.setSuccessorCount(lineScanner.nextInt()); // #successors
-                    List<Integer> successors = new ArrayList<>();
-                    while (lineScanner.hasNext()) {
-                        successors.add(lineScanner.nextInt()); // successors
-                    }
+        try (Scanner fileScanner = new Scanner(getResourceReader(resourceFilePath))) {
+            Map<Integer, Job> jobs = new HashMap<>();
+            ScanningState state = ScanningState.STARTED;
 
-                    job.setSuccessors(successors);
-                    jobs.put(job.getNr(), job);
-                    break;
-                case DURATIONS:
-                    if (lineStartsNotWithNumber(line))
-                        continue;
-                    job = jobs.get(lineScanner.nextInt()); // jobnr.
-                    job.setMode(lineScanner.nextInt()); // mode
-                    job.setDurationDays(lineScanner.nextInt()); // duration
-                    job.setR1HoursPerDay(lineScanner.nextInt()); // R1
-                    job.setR2HoursPerDay(lineScanner.nextInt()); // R2
-                    job.setR3HoursPerDay(lineScanner.nextInt()); // R3
-                    job.setR4HoursPerDay(lineScanner.nextInt()); // R4
-                    break;
-                case RESOURCE:
-                    if (lineStartsNotWithNumber(line))
-                        continue;
-                    project.setR1CapacityPerDay(lineScanner.nextInt()); // R1
-                    project.setR2CapacityPerDay(lineScanner.nextInt()); // R2
-                    project.setR3CapacityPerDay(lineScanner.nextInt()); // R3
-                    project.setR4CapacityPerDay(lineScanner.nextInt()); // R4
-                    break;
-                case FINISHED:
-                    project.setJobs(processPredecessors(jobs));
-                    break;
-                default:
-                    continue;
-            }
-            if (state == ScanningState.FINISHED) {
-                break;
-            }
-        }
+            while (fileScanner.hasNext()) {
+                String line = fileScanner.nextLine();
+                if (line.equals("")) continue;
+
+                state = identifyScanningState(state, line);
+                try (Scanner lineScanner = new Scanner(line)) {
+                    Job job;
+                    switch (state) {
+                        case INFORMATION:
+                            if (line.startsWith("jobs")) {
+                                String[] split = line.split(":");
+                                project.setJobCount(Integer.parseInt(split[1].replaceAll(" ", ""))); // jobs
+                            }
+                            if (line.startsWith("horizon")) {
+                                String[] split = line.split(":");
+                                project.setHorizon(Integer.parseInt(split[1].replaceAll(" ", ""))); // horizon
+                            }
+                            break;
+                        case RELATIONS:
+                            if (lineStartsNotWithNumber(line))
+                                continue;
+                            job = new Job();
+                            job.setNr(lineScanner.nextInt()); // jobnr.
+                            lineScanner.next(); // #modes
+                            job.setSuccessorCount(lineScanner.nextInt()); // #successors
+                            List<Integer> successors = new ArrayList<>();
+                            while (lineScanner.hasNext()) {
+                                successors.add(lineScanner.nextInt()); // successors
+                            }
+
+                            job.setSuccessors(successors);
+                            jobs.put(job.getNr(), job);
+                            break;
+                        case DURATIONS:
+                            if (lineStartsNotWithNumber(line))
+                                continue;
+                            job = jobs.get(lineScanner.nextInt()); // jobnr.
+                            job.setMode(lineScanner.nextInt()); // mode
+                            job.setDurationDays(lineScanner.nextInt()); // duration
+                            job.setR1HoursPerDay(lineScanner.nextInt()); // R1
+                            job.setR2HoursPerDay(lineScanner.nextInt()); // R2
+                            job.setR3HoursPerDay(lineScanner.nextInt()); // R3
+                            job.setR4HoursPerDay(lineScanner.nextInt()); // R4
+                            break;
+                        case RESOURCE:
+                            if (lineStartsNotWithNumber(line))
+                                continue;
+                            project.setR1CapacityPerDay(lineScanner.nextInt()); // R1
+                            project.setR2CapacityPerDay(lineScanner.nextInt()); // R2
+                            project.setR3CapacityPerDay(lineScanner.nextInt()); // R3
+                            project.setR4CapacityPerDay(lineScanner.nextInt()); // R4
+                            break;
+                        case FINISHED:
+                            project.setJobs(processPredecessors(jobs));
+                            break;
+                        default:
+                            continue;
+                    }
+                    if (state == ScanningState.FINISHED) {
+                        break;
+                    }
+                } // close line scanner
+            } // while file has content
+        } // close file scanner
         return project;
     }
 
