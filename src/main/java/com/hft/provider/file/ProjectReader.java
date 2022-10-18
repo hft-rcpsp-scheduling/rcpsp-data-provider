@@ -5,6 +5,7 @@ import com.hft.provider.controller.model.Project;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ProjectReader extends FileReader {
     private final static String PROJECT_PATH = "projects/";
@@ -16,6 +17,7 @@ public class ProjectReader extends FileReader {
     public List<String> getAllFilePaths() throws IOException {
         List<String> paths = new ArrayList<>();
         List<String> sizeDirs = getDirectoryPaths(PROJECT_PATH);
+        sizeDirs = sizeDirs.stream().map(dir -> dir + "/").collect(Collectors.toList());
         for (String directory : sizeDirs) {
             paths.addAll(getDirectoryPaths(directory));
         }
