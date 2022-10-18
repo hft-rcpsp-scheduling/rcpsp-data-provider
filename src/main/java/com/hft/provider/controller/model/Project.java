@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ApiModel
@@ -31,7 +32,7 @@ public class Project {
     @ApiModelProperty(value = "Defined day horizon for the project", example = "24")
     private int horizon;
     @ApiModelProperty(value = "Defined job count (includes dummy start and end)", example = "122")
-    private int jobCount;
+    private int jobCount = 0;
     @ApiModelProperty(value = "Defined jobs for the project")
-    private List<Job> jobs;
+    private List<Job> jobs = new ArrayList<>();
 }
