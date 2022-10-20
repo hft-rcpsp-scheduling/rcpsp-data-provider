@@ -1,0 +1,34 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+name: Deployment
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - Docker-Image
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  ssh-deploy:
+    name: Deploy Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: BW Cloud Deployment
+        uses: fifsky/ssh-action@master
+        with:
+          command: |
+            echo "[INFO] Stop running container:"
+            sudo docker kill provider-app
+            echo "[INFO] Delete old container:"
+            sudo docker rm provider-app
+            echo "[INFO] Pull new image:"
+            sudo docker pull docker pull ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest
+            echo "[INFO] Run new image:"
+            sudo docker run -d -p 80:8080 --name provider-app ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest --restart always
+          host: ${{ secrets.BW_CLOUD_IP }}
+          user: ${{ secrets.BW_CLOUD_USER }}
+          key: ${{ secrets.BW_CLOUD_PRIVATE_KEY}}
