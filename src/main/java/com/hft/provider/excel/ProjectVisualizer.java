@@ -124,7 +124,7 @@ public class ProjectVisualizer extends ExcelGenerator {
             writeRowCell(row, 1, job.getMode());
             writeRowCell(row, 2, job.getDurationDays());
             writeRowCell(row, 3, job.getStartDay());
-            writeRowCell(row, 4, job.getEndDay());
+            writeRowCell(row, 4, job.getStartDay() + job.getDurationDays());
             writeRowCell(row, 5, job.getR1HoursPerDay());
             writeRowCell(row, 6, job.getR2HoursPerDay());
             writeRowCell(row, 7, job.getR3HoursPerDay());

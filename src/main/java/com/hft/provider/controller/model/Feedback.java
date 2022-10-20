@@ -1,5 +1,6 @@
 package com.hft.provider.controller.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -19,11 +20,16 @@ public class Feedback {
     // given makespan
     @ApiModelProperty(value = "Given record time span", example = "24")
     private int recordTimeSpan;
-    // feedback
-    @ApiModelProperty(value = "Calculation if the solution was feasible", example = "true")
-    private boolean isFeasible;
+    // makespan comparison
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @ApiModelProperty(value = "Provided solution time span", example = "24")
+    private Integer solutionTimeSpan;
     @ApiModelProperty(value = "Comparison to record", example = "false")
     private boolean isNewRecord;
-    @ApiModelProperty(value = "Provided solution time span", example = "24")
-    private int solutionTimeSpan;
+    // evaluation
+    @ApiModelProperty(value = "Calculation if the solution was feasible", example = "true")
+    private boolean isFeasible;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @ApiModelProperty(value = "Reason if the solution is not feasible", example = "Start days of the jobs are missing.")
+    private String notFeasibleReason;
 }
