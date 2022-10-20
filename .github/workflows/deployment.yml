@@ -18,9 +18,13 @@ jobs:
 
     steps:
       - name: BW Cloud Deployment
-        uses: fifsky/ssh-action@master
+        uses: appleboy/ssh-action@master
         with:
-          command: |
+          host: ${{ secrets.BW_CLOUD_IP }}
+          username: ${{ secrets.BW_CLOUD_USER }}
+          key: ${{ secrets.BW_CLOUD_PRIVATE_KEY }}
+          passphrase: ${{ secrets.BW_CLOUD_PASSPHRASE }}
+          script: |
             echo "[INFO] Stop running container:"
             sudo docker kill provider-app
             echo "[INFO] Delete old container:"
@@ -29,6 +33,3 @@ jobs:
             sudo docker pull docker pull ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest
             echo "[INFO] Run new image:"
             sudo docker run -d -p 80:8080 --name provider-app ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest --restart always
-          host: ${{ secrets.BW_CLOUD_IP }}
-          user: ${{ secrets.BW_CLOUD_USER }}
-          key: ${{ secrets.BW_CLOUD_PRIVATE_KEY}}
