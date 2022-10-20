@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileReader {
+public abstract class FileReader {
 
     /**
      * Note: Don't forget to close the reader.
@@ -39,5 +39,22 @@ public class FileReader {
             }
         }
         return paths;
+    }
+
+    /**
+     * @param line text line
+     * @return if line starts with digit (whitespace gets ignored)
+     */
+    protected boolean lineStartsNotWithNumber(String line) {
+        return !Character.isDigit(line.replaceAll(" ", "").charAt(0));
+    }
+
+    /**
+     * @param path full path divided by '/'
+     * @return last part of the path as file name
+     */
+    protected String extractFileName(String path) {
+        String[] pathSplit = path.split("/");
+        return pathSplit[pathSplit.length - 1];
     }
 }

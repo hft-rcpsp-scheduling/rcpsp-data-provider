@@ -2,14 +2,16 @@ package com.hft.provider.controller;
 
 import com.hft.provider.controller.model.Feedback;
 import com.hft.provider.controller.model.Project;
+import com.hft.provider.eval.SolutionEvaluator;
+import com.hft.provider.file.MakespanReader;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @Api(tags = "Solution Evaluation")
@@ -17,9 +19,21 @@ import java.util.List;
 @RequestMapping("/api/eval")
 public class EvaluationController {
 
+    private final Logger LOGGER = Logger.getLogger(EvaluationController.class.getName());
+
     @ApiOperation("Evaluate feasibility of solution.")
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Feedback>> validate(@RequestBody List<Project> solutions) {
-        return ResponseEntity.ok(new ArrayList<>());
+    public ResponseEntity<Feedback> validate(@RequestBody Project solution) throws IOException {
+        LOGGER.fine("Fetch project from file (size=" + solution.getSize() + ", par=" + solution.getPar() + ", inst=" + solution.getInst() + ")");
+        MakespanReader reader = new MakespanReader();
+        Feedback feedback = reader.parseMakespans("makespans/j" + solution.getSize() + "hrs.sm")
+                .stream().filter(f -> f.getSize() == solution.getSize() && f.getPar() == solution.getPar() && f.getInst() == solution.getInst())
+                .findFirst().orElseThrow();
+        feedback.setSolutionTimeSpan(solution.getJobs()
+                .stream().filter(job -> job.getNr() == solution.getJobCount())
+                .findFirst().orElseThrow()
+                .getStartDay());
+        feedback.setNewRecord(feedback.getSolutionTimeSpan() != null && feedback.getSolutionTimeSpan() <= feedback.getRecordTimeSpan());
+        return ResponseEntity.ok(SolutionEvaluator.evaluate(solution, feedback));
     }
 }

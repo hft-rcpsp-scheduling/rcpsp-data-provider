@@ -40,6 +40,4 @@ public class Job {
     // solution
     @ApiModelProperty(value = "Needs to be calculated for a solution", example = "0")
     private Integer startDay; // wrapper object to send null when providing data
-    @ApiModelProperty(value = "Needs to be calculated for a solution", example = "1")
-    private Integer endDay; // wrapper object to send null when providing data
 }
