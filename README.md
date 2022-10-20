@@ -55,14 +55,14 @@ sudo apt-get upgrade
 ```shell
 sudo apt install docker.io
 sudo systemctl start docker
-sudo systemctl enable 
+sudo systemctl enable docker
 sudo groupadd docker
 sudo usermod -aG docker ${USER}
 ```
 * pull docker image from repository
 ```shell
 sudo docker pull ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest
-sudo docker run -d -p 80:8080 --name provider-app ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest
+sudo docker run -d -p 80:8080 --name provider-app ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest --restart always
 ```
 * check configuration for Program name: docker-proxy with the Local Address 0.0.0.0:80
 ```shell
