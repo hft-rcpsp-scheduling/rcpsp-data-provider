@@ -41,6 +41,15 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- ⋁ Excel Conversion Utility -->
+        <dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+            <!-- Excel files https://www.baeldung.com/java-microsoft-excel -->
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.0.0</version>
+        </dependency>
+        <!-- ∧ Excel Conversion Utility -->
         <!-- ⋁ Swagger API Documentation -->
         <dependency>
             <groupId>io.springfox</groupId>
