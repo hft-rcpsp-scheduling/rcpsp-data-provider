@@ -30,6 +30,6 @@ jobs:
             echo "[INFO] Delete old container:"
             sudo docker rm provider-app
             echo "[INFO] Pull new image:"
-            sudo docker pull docker pull ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest
+            sudo docker pull ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest
             echo "[INFO] Run new image:"
             sudo docker run -d -p 80:8080 --name provider-app ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest --restart always
