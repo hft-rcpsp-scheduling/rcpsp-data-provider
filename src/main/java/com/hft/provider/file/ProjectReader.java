@@ -108,9 +108,7 @@ public class ProjectReader extends FileReader {
         return project;
     }
 
-    private boolean lineStartsNotWithNumber(String line) {
-        return !Character.isDigit(line.replaceAll(" ", "").charAt(0));
-    }
+    // === PRIVATE =====================================================================================================
 
     private ScanningState identifyScanningState(ScanningState currentState, String line) {
         return switch (currentState) {
@@ -138,15 +136,6 @@ public class ProjectReader extends FileReader {
             }
         }
         return new ArrayList<>(jobs.values());
-    }
-
-    /**
-     * @param path full path with '/' divided
-     * @return last part of the path as file name
-     */
-    private String extractFileName(String path) {
-        String[] pathSplit = path.split("/");
-        return pathSplit[pathSplit.length - 1];
     }
 
     /**

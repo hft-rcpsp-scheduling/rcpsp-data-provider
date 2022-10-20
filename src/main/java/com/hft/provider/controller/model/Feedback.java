@@ -16,6 +16,9 @@ public class Feedback {
     private int par;
     @ApiModelProperty(value = "File identifier: j1201_{inst}", example = "10")
     private int inst;
+    // given makespan
+    @ApiModelProperty(value = "Given record time span", example = "24")
+    private int recordTimeSpan;
     // feedback
     @ApiModelProperty(value = "Calculation if the solution was feasible", example = "true")
     private boolean isFeasible;
@@ -23,6 +26,4 @@ public class Feedback {
     private boolean isNewRecord;
     @ApiModelProperty(value = "Provided solution time span", example = "24")
     private int solutionTimeSpan;
-    @ApiModelProperty(value = "Given record time span", example = "24")
-    private int recordTimeSpan;
 }

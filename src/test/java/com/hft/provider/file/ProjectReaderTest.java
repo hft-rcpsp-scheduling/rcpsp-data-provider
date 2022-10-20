@@ -5,6 +5,7 @@ import com.hft.provider.controller.model.Project;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -74,5 +75,15 @@ class ProjectReaderTest {
         assertEquals(0, job32.getR2HoursPerDay());
         assertEquals(0, job32.getR3HoursPerDay());
         assertEquals(0, job32.getR4HoursPerDay());
+    }
+
+    @Test
+    void parseAllFiles() throws IOException {
+        List<String> paths = projectReader.getAllFilePaths();
+        List<Project> projects = new ArrayList<>();
+        for (String path : paths) {
+            projects.add(projectReader.parseProject(path));
+        }
+        assertEquals(2040, projects.size());
     }
 }
