@@ -25,16 +25,20 @@ public class SolutionEvaluator {
         String notFeasibleReason = "";
         if (!evaluateRelationships(solution)) {
             feedback.setFeasible(false);
-            notFeasibleReason += "The relationships are not represented. ";
+            notFeasibleReason += "The relationships are an issue.";
         }
         if (!evaluateResourceUsage(solution)) {
             feedback.setFeasible(false);
-            notFeasibleReason += "The relationships are not represented.";
+            if (!notFeasibleReason.isEmpty())
+                notFeasibleReason += " ";
+            notFeasibleReason += "The resource boundaries are an issue.";
         }
         if (!feedback.isFeasible())
             feedback.setNotFeasibleReason(notFeasibleReason);
         return feedback;
     }
+
+    // === PRIVATE =====================================================================================================
 
     private static boolean checkStartDays(Project solution) {
         for (Job job : solution.getJobs()) {

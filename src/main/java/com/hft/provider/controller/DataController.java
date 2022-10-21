@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 @RestController
 @RequestMapping("/api/data")
 public class DataController {
-
     private final Logger LOGGER = Logger.getLogger(DataController.class.getName());
 
     @ApiOperation("Get all sets of data.")
@@ -45,6 +44,7 @@ public class DataController {
             @ApiParam(value = "File: j{size}1_1", example = "120") @PathVariable Integer size,
             @ApiParam(value = "File: j120{par}_1", example = "1") @PathVariable Integer par,
             @ApiParam(value = "File: j1201_{inst}", example = "1") @PathVariable Integer inst) throws IOException {
+        LOGGER.info("Fetch project from file (size=" + size + ", par=" + par + ", inst=" + inst + ")");
         ProjectReader reader = new ProjectReader();
         return ResponseEntity.ok(reader.parseProject("projects/j" + size + "/j" + size + par + "_" + inst + ".sm"));
     }
