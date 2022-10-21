@@ -7,7 +7,7 @@
 This application provides an API to __serve raw data__ and __validate solutions__. It should build the infrastructure
 for scheduling-algorithm implementations and defines the input- and output-format.
 
-## API
+## REST API
 
 * [Controller & Models](src/main/java/com/hft/provider/controller)
 * Local Documentation: [http://localhost:8080/swagger-ui/](http://localhost:8080/swagger-ui/)
@@ -29,6 +29,8 @@ API                                        Client
  | <-------- request visualization --------- |
  | ------- send visualization file --------> |
 ```
+
+> Open the Swagger-UI to get specific information about the REST-calls and their related data.
 
 ## Configuration
 
