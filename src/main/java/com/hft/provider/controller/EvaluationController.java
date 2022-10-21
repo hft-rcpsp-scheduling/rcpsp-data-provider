@@ -18,13 +18,12 @@ import java.util.logging.Logger;
 @RestController
 @RequestMapping("/api/eval")
 public class EvaluationController {
-
     private final Logger LOGGER = Logger.getLogger(EvaluationController.class.getName());
 
     @ApiOperation("Evaluate feasibility of solution.")
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Feedback> validate(@RequestBody Project solution) throws IOException {
-        LOGGER.fine("Fetch project from file (size=" + solution.getSize() + ", par=" + solution.getPar() + ", inst=" + solution.getInst() + ")");
+        LOGGER.info("Fetch makespans from file (size=" + solution.getSize() + ", par=" + solution.getPar() + ", inst=" + solution.getInst() + ")");
         MakespanReader reader = new MakespanReader();
         Feedback feedback = reader.parseMakespans("makespans/j" + solution.getSize() + "hrs.sm")
                 .stream().filter(f -> f.getSize() == solution.getSize() && f.getPar() == solution.getPar() && f.getInst() == solution.getInst())
@@ -34,6 +33,7 @@ public class EvaluationController {
                 .findFirst().orElseThrow()
                 .getStartDay());
         feedback.setNewRecord(feedback.getSolutionTimeSpan() != null && feedback.getSolutionTimeSpan() <= feedback.getRecordTimeSpan());
+        LOGGER.info("Evaluated solution (feedback=" + feedback + ")");
         return ResponseEntity.ok(SolutionEvaluator.evaluate(solution, feedback));
     }
 }
