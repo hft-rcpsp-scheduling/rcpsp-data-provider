@@ -37,18 +37,18 @@ API                                        Client
 * Default profile: [application.properties](src/main/resources/application.properties)
 * Production profile: [application-prod.properties](src/main/resources/application-prod.properties)
 
-| Key                                        |               Example               | Description                                                               |
-|:-------------------------------------------|:-----------------------------------:|:--------------------------------------------------------------------------|
-| server.port                                |                8080                 |                                                                           |
-| spring.datasource.url                      |     jdbc:mysql://localhost:3306     |                                                                           |
-| spring.datasource.username                 |                root                 | Should be injected into the productive container (if possible not root).  |
-| spring.datasource.password                 |              password               | Should be injected into the productive container.                         |
-| spring.jpa.hibernate.ddl-auto              |               update                | Values: `create` -> `update` -> `none` (mode for the db schema update)    |
-| spring.sql.init.mode                       |               always                | Values: `always` or `never` (mode to initialise date in the db)           |
-| spring.jpa.defer-datasource-initialization |                true                 |                                                                           |
-| spring.jpa.properties.hibernate.dialect    | org.hibernate.dialect.MySQL8Dialect |                                                                           |
-| spring.jpa.show-sql                        |                false                | Values: `true` or `false` (mode for sql logging)                          |
-| logging.level.root                         |                INFO                 | Values: `DEBUG` -> `INFO` -> `WARN` -> `ERROR` (mode for general logging) |
+| Key                                        |               Example               | Description                                                                      |
+|:-------------------------------------------|:-----------------------------------:|:---------------------------------------------------------------------------------|
+| server.port                                |                8080                 |                                                                                  |
+| spring.datasource.url                      |     jdbc:mysql://localhost:3306     |                                                                                  |
+| spring.datasource.username                 |                root                 | Should be injected into the productive container (if possible not root).         |
+| spring.datasource.password                 |              password               | Should be injected into the productive container.                                |
+| spring.jpa.hibernate.ddl-auto              |               update                | Values: `create` -> `update` -> `none` (mode for the db schema update)           |
+| spring.sql.init.mode                       |               always                | Values: `always` or `never` (mode to initialise date in the db)                  |
+| spring.jpa.defer-datasource-initialization |                true                 | Values: `true` or `false` (includes [data.sql](src/main/resources) in data init) |
+| spring.jpa.properties.hibernate.dialect    | org.hibernate.dialect.MySQL8Dialect |                                                                                  |
+| spring.jpa.show-sql                        |                false                | Values: `true` or `false` (mode for sql logging)                                 |
+| logging.level.root                         |                INFO                 | Values: `DEBUG` -> `INFO` -> `WARN` -> `ERROR` (mode for general logging)        |
 
 > To get more information about the configuration, please read the official documentations.
 

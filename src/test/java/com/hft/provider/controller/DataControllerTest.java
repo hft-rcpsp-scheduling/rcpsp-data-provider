@@ -31,6 +31,16 @@ class DataControllerTest {
     @Test
     void getAllProjects() throws Exception {
         mockMvc.perform(
+                        get("/api/file")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .characterEncoding("UTF-8"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    void getAllProjectsFromDatabase() throws Exception {
+        mockMvc.perform(
                         get("/api/data")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .characterEncoding("UTF-8"))
@@ -41,7 +51,7 @@ class DataControllerTest {
     @Test
     void getProject() throws Exception {
         mockMvc.perform(
-                        get("/api/data/120/1/1")
+                        get("/api/file/120/1/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .characterEncoding("UTF-8"))
                 .andExpect(status().isOk())
