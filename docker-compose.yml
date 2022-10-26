@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  mysql-service:
+    image: mysql:8.0
+    container_name: rcpsp-mysql
+    restart: on-failure
+    environment:
+      - MYSQL_ROOT_PASSWORD=SecretPassword
+    volumes:
+      - mysql:/var/lib/mysql
+
+  provider-service:
+    image: ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest
+    container_name: rcpsp-provider-app
+    restart: always
+    depends_on:
+      - mysql-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-service:3306/rcpsp_db?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=SecretPassword
+    expose:
+      - 8080
+    ports:
+      - "8080:8080"
+
+volumes:
+  mysql:
