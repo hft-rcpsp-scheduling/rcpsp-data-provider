@@ -38,6 +38,13 @@ class ProjectEntity implements Serializable {
     @OneToMany(mappedBy = "projectEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<JobEntity> jobEntities;
 
+    /**
+     * Sets id = size par _ inst
+     *
+     * @param size identifier property
+     * @param par  identifier property
+     * @param inst identifier property
+     */
     public ProjectEntity(int size, int par, int inst) {
         this.id = "" + size + par + "_" + inst;
         this.size = size;

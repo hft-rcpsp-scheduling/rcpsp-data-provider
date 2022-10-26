@@ -23,7 +23,7 @@ public class EntityMapper {
         projectEntity.setHorizon(project.getHorizon());
         projectEntity.setJobCount(project.getJobCount());
         project.getJobs().forEach(job -> {
-            JobEntity jobEntity = new JobEntity(job.getNr(), projectEntity);
+            JobEntity jobEntity = new JobEntity(projectEntity, job.getNr());
             jobEntity.setSuccessorCount(job.getSuccessorCount());
             jobEntity.setPredecessorCount(job.getPredecessorCount());
             try {

@@ -73,6 +73,13 @@ public class DatabaseService {
 
     // === PACKAGE PRIVATE =============================================================================================
 
+
+    /**
+     * Persist entities without existence check. Improves performance, but is not as secure.
+     * Protected for only internal usage.
+     *
+     * @param entities to persist.
+     */
     @Transactional
     protected void insertProjects(List<ProjectEntity> entities) {
         LOGGER.info("Starting to save " + entities.size() + " projects to the database.");

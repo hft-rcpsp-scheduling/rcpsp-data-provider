@@ -26,6 +26,12 @@ class SolutionDetailEntity {
     @Column(name = "start")
     private int startDay;
 
+    /**
+     * Sets id = solutionId _ jobNr
+     *
+     * @param solutionEntity linked solution
+     * @param jobEntity      linked job
+     */
     public SolutionDetailEntity(SolutionEntity solutionEntity, JobEntity jobEntity) {
         this.id = solutionEntity.getId() + "_" + jobEntity.getNr();
         this.jobEntity = jobEntity;

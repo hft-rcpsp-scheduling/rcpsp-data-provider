@@ -12,6 +12,12 @@ public class ProjectRepoEMImpl implements ProjectRepoEM {
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * Persist entities without existence check. Improves performance, but is not as secure.
+     * Transaction gets flushed every 100 entries.
+     *
+     * @param entities to persist.
+     */
     @Override
     @Transactional
     public void saveAllFast(List<ProjectEntity> entities) {

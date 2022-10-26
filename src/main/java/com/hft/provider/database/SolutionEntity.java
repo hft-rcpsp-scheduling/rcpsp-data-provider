@@ -31,6 +31,11 @@ class SolutionEntity {
     @OneToMany(mappedBy = "solutionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SolutionDetailEntity> detailEntities;
 
+    /**
+     * Generates id and creation properties
+     *
+     * @param projectEntity linked project
+     */
     public SolutionEntity(ProjectEntity projectEntity) {
         this.id = null; // generated
         this.projectEntity = projectEntity;

@@ -44,7 +44,13 @@ class JobEntity implements Serializable {
     @Column(name = "r4")
     private int r4;
 
-    public JobEntity(int nr, ProjectEntity projectEntity) {
+    /**
+     * Sets id = projectId _ nr
+     *
+     * @param projectEntity identifier property
+     * @param nr            identifier property
+     */
+    public JobEntity(ProjectEntity projectEntity, int nr) {
         this.id = projectEntity.getId() + "_" + nr;
         this.nr = nr;
         this.projectEntity = projectEntity;
