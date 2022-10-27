@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -16,6 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 @WebAppConfiguration
 @SpringBootTest(classes = {Application.class})
@@ -29,6 +31,16 @@ class DataControllerTest {
     @Test
     void getAllProjects() throws Exception {
         mockMvc.perform(
+                        get("/api/file")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .characterEncoding("UTF-8"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    void getAllProjectsFromDatabase() throws Exception {
+        mockMvc.perform(
                         get("/api/data")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .characterEncoding("UTF-8"))
@@ -39,7 +51,7 @@ class DataControllerTest {
     @Test
     void getProject() throws Exception {
         mockMvc.perform(
-                        get("/api/data/120/1/1")
+                        get("/api/file/120/1/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .characterEncoding("UTF-8"))
                 .andExpect(status().isOk())
