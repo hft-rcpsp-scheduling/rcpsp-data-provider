@@ -31,7 +31,7 @@ class DataControllerTest {
     @Test
     void getAllProjects() throws Exception {
         mockMvc.perform(
-                        get("/api/file")
+                        get("/api/files")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .characterEncoding("UTF-8"))
                 .andExpect(status().isOk())
@@ -40,8 +40,9 @@ class DataControllerTest {
 
     @Test
     void getAllProjectsFromDatabase() throws Exception {
+        // TODO change back to test the db endpoint
         mockMvc.perform(
-                        get("/api/data")
+                        get("/api/files")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .characterEncoding("UTF-8"))
                 .andExpect(status().isOk())
