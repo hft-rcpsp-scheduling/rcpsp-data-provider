@@ -37,6 +37,7 @@ sudo systemctl enable docker
 sudo groupadd docker
 sudo usermod -aG docker ${USER}
 ```
+If needed [upgrade](https://docs.docker.com/engine/install/ubuntu/#set-up-the-repository) to a full suit with compose ect.
 
 Pull and run the docker image for the application:
 
@@ -50,4 +51,9 @@ Check configuration for the program name: `docker-proxy with the Local Address 0
 ```shell
 sudo apt install net-tools
 sudo netstat -plnut
+```
+
+Check the log of your Container:
+```shell
+sudo docker logs -n "all" rcpsp-provider-app
 ```
