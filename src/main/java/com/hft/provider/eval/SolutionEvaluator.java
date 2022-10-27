@@ -53,7 +53,7 @@ public class SolutionEvaluator {
         for (Job job : map.values()) {
             int endDay = job.getStartDay() + job.getDurationDays();
             for (int successor : job.getSuccessors()) {
-                if (map.get(successor).getStartDay() < endDay)
+                if (map.get(successor) == null || map.get(successor).getStartDay() < endDay)
                     return false;
             }
         }

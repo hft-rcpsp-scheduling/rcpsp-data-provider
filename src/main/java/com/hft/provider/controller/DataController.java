@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -35,32 +35,6 @@ public class DataController {
         this.dbService = dbService;
     }
 
-    @ApiOperation("Get all sets of data from the files.")
-    @GetMapping(path = "/files", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Project>> getAllProjects() throws IOException {
-        ProjectReader reader = new ProjectReader();
-        List<Project> projects = new ArrayList<>();
-        List<String> files = reader.getAllFilePaths();
-        for (String file : files) {
-            try {
-                projects.add(reader.parseProject(file));
-            } catch (Exception e) {
-                LOGGER.severe(e.getClass().getSimpleName() + ": " + e.getMessage() + " (at parsing file: " + file + ")");
-            }
-        }
-        LOGGER.info("Parsed " + projects.size() + " of " + files.size() + " projects.");
-        return ResponseEntity.ok(projects);
-    }
-
-    //@ApiOperation("Get all sets of data from the database.")
-    //@GetMapping(path = "/data", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Project>> getAllProjectsFromDatabase() {
-        LOGGER.info("Fetch all projects from database.");
-        return ResponseEntity.ok(
-                EntityMapper.mapPListToModel(
-                        dbService.selectAllProjects()));
-    }
-
     @Deprecated
     @ApiOperation("Get a set of data from a file.")
     @GetMapping(path = "/file/{size}/{par}/{inst}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -72,6 +46,12 @@ public class DataController {
         ProjectReader reader = new ProjectReader();
         return ResponseEntity.ok(
                 reader.parseProject("projects/j" + size + "/j" + size + par + "_" + inst + ".sm"));
+    }
+
+    @ApiOperation("Get a set of data from a file.")
+    @GetMapping(path = "/data/options", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<Integer, Map<Integer, List<Integer>>>> getProjectOptions() {
+        return ResponseEntity.ok(dbService.selectProjectOptions());
     }
 
     @ApiOperation("Get a set of data from the database (equivalent to file).")
@@ -103,8 +83,9 @@ public class DataController {
     public ResponseEntity<StoredSolution> saveSolutionToDatabase(
             @ApiParam(value = "Creator ID", example = "AI") @RequestParam String creator,
             @RequestBody Project solution) throws InvalidObjectException {
-        if (!SolutionEvaluator.evaluate(solution, new Feedback()).isFeasible()) {
-            throw new InvalidObjectException("Solution is not feasible.");
+        Feedback feedback = SolutionEvaluator.evaluate(solution, new Feedback());
+        if (!feedback.isFeasible()) {
+            throw new InvalidObjectException("Solution is not feasible. " + feedback.getNotFeasibleReason());
         }
         LOGGER.info("Saving solution (size=" + solution.getSize() + ", par=" + solution.getPar() + ", inst=" + solution.getInst() + ") from creator:" + creator);
         return ResponseEntity.ok(

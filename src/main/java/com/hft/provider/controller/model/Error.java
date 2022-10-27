@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
+import java.sql.Timestamp;
 
 @ApiModel
 @NoArgsConstructor
@@ -28,7 +27,7 @@ public class Error {
     private String path;
 
     public Error(HttpStatus httpStatus, HttpServletRequest originalRequest, Exception exception) {
-        this.timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(LocalDate.now());
+        this.timestamp = new Timestamp(System.currentTimeMillis()).toString();
         this.status = httpStatus.value();
         this.error = httpStatus.getReasonPhrase();
         this.origin = exception.getClass().getSimpleName();

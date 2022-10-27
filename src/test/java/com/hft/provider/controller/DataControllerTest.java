@@ -29,20 +29,9 @@ class DataControllerTest {
     protected MockMvc mockMvc;
 
     @Test
-    void getAllProjects() throws Exception {
+    void getDataOptions() throws Exception {
         mockMvc.perform(
-                        get("/api/files")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .characterEncoding("UTF-8"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    }
-
-    @Test
-    void getAllProjectsFromDatabase() throws Exception {
-        // TODO change back to test the db endpoint
-        mockMvc.perform(
-                        get("/api/files")
+                        get("/api/data/options")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .characterEncoding("UTF-8"))
                 .andExpect(status().isOk())

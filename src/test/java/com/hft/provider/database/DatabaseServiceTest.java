@@ -46,11 +46,6 @@ class DatabaseServiceTest {
     }
 
     @Test
-    void selectAllProjects() {
-        assertEquals(2, projectDB.selectAllProjects().size());
-    }
-
-    @Test
     @Order(1)
     void insertSolution() {
         SolutionEntity entity = projectDB.insertSolution(solution, "tester");

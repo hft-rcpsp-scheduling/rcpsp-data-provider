@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @Component
@@ -43,13 +45,20 @@ public class DatabaseService {
         insertProjects(parseAllProjects());
     }
 
+    public Map<Integer, Map<Integer, List<Integer>>> selectProjectOptions() {
+        Map<Integer, Map<Integer, List<Integer>>> options = new HashMap<>();
+        for (int size : projectRepo.getSizeOptions()) {
+            options.put(size, new HashMap<>());
+            for (int par : projectRepo.getParOptions(size)) {
+                options.get(size).put(par, projectRepo.getInstOptions(size, par));
+            }
+        }
+        return options;
+    }
+
     @Transactional
     public ProjectEntity selectProject(int size, int par, int inst) {
         return projectRepo.getById("" + size + par + "_" + inst);
-    }
-
-    public List<ProjectEntity> selectAllProjects() {
-        return projectRepo.findAll();
     }
 
     @Transactional
