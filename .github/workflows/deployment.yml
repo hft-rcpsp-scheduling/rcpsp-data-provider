@@ -25,11 +25,13 @@ jobs:
           key: ${{ secrets.BW_CLOUD_PRIVATE_KEY }}
           passphrase: ${{ secrets.BW_CLOUD_PASSPHRASE }}
           script: |
-            echo "[INFO] Stop running container:"
-            sudo docker kill provider-app
-            echo "[INFO] Delete old container:"
-            sudo docker rm provider-app
-            echo "[INFO] Pull new image:"
-            sudo docker pull ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest
-            echo "[INFO] Run new image:"
-            sudo docker run -d -p 80:8080 --name provider-app ghcr.io/hft-rcpsp-scheduling/rcpsp-data-provider:latest --restart always
+            echo "[INFO] Download docker-compose.yml file:"
+            curl -H 'Accept: application/vnd.github.v4.raw' -o docker-compose.yml -L https://api.github.com/repos/hft-rcpsp-scheduling/rcpsp-data-provider/contents/docker-compose-prod.yml
+            echo "[INFO] Stop container stack:"
+            sudo docker compose rm --stop --force
+            echo "[INFO] Update images:"
+            sudo docker compose pull
+            echo "[INFO] Run container stack:"
+            sudo docker compose up -d
+            echo "[INFO] Delete docker-compose.yml file:"
+            rm docker-compose.yml
