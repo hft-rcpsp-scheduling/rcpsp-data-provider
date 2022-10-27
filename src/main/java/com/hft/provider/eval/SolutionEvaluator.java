@@ -33,8 +33,17 @@ public class SolutionEvaluator {
                 notFeasibleReason += " ";
             notFeasibleReason += "The resource boundaries are an issue.";
         }
-        if (!feedback.isFeasible())
+        Integer solutionTimeSpan = checkSolutionTimespan(solution);
+        if (solutionTimeSpan == null) {
+            feedback.setFeasible(false);
+            if (!notFeasibleReason.isEmpty())
+                notFeasibleReason += " ";
+            notFeasibleReason += "The solution timespan is an issue.";
+        }
+        if (!feedback.isFeasible()) {
             feedback.setNotFeasibleReason(notFeasibleReason);
+        }
+        feedback.setNewRecord(feedback.getSolutionTimeSpan() != null && feedback.getSolutionTimeSpan() <= feedback.getRecordTimeSpan());
         return feedback;
     }
 
@@ -79,5 +88,16 @@ public class SolutionEvaluator {
                 return false;
         }
         return true;
+    }
+
+    private static Integer checkSolutionTimespan(Project solution) {
+        try {
+            return solution.getJobs()
+                    .stream().filter(job -> job.getNr() == solution.getJobs().size())
+                    .findFirst().orElseThrow()
+                    .getStartDay();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
