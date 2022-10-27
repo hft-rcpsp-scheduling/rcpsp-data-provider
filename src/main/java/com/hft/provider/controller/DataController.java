@@ -35,9 +35,8 @@ public class DataController {
         this.dbService = dbService;
     }
 
-    @Deprecated
     @ApiOperation("Get all sets of data from the files.")
-    @GetMapping(path = "/file", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/files", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Project>> getAllProjects() throws IOException {
         ProjectReader reader = new ProjectReader();
         List<Project> projects = new ArrayList<>();
@@ -53,8 +52,8 @@ public class DataController {
         return ResponseEntity.ok(projects);
     }
 
-    @ApiOperation("Get all sets of data from the database.")
-    @GetMapping(path = "/data", produces = MediaType.APPLICATION_JSON_VALUE)
+    //@ApiOperation("Get all sets of data from the database.")
+    //@GetMapping(path = "/data", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Project>> getAllProjectsFromDatabase() {
         LOGGER.info("Fetch all projects from database.");
         return ResponseEntity.ok(
