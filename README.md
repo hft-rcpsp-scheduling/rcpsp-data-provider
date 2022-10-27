@@ -98,10 +98,17 @@ docker compose rm --stop --force
 * [docker-compose-build.yml](docker-compose-build.yml)
 * Used for development or run old versions of the application.
 
-__Build & Run image:__
+__Build & Run stack:__
 
 ```shell
 docker compose --file docker-compose-build.yml up --build -d
+```
+
+__Build & Run container:__
+
+```shell
+docker build -t data-provider .
+docker run -d -p 8080:8080 --name provider-app data-provider
 ```
 
 __Stop & Delete stack:__

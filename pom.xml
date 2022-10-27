@@ -37,7 +37,7 @@
             <!-- Excel files https://www.baeldung.com/java-microsoft-excel -->
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>5.0.0</version>
+            <version>5.2.3</version>
         </dependency>
         <!-- ∧ Excel Conversion Utility -->
         <!-- ⋁ Swagger API Documentation -->
@@ -72,6 +72,7 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <addResources>true</addResources>
                 </configuration>
             </plugin>
         </plugins>
