@@ -35,20 +35,7 @@ public class DataController {
         this.dbService = dbService;
     }
 
-    @Deprecated
-    @ApiOperation("Get a set of data from a file.")
-    @GetMapping(path = "/file/{size}/{par}/{inst}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Project> getProject(
-            @ApiParam(value = "File: j{size}1_1 (30/60/90/120)", example = "30") @PathVariable Integer size,
-            @ApiParam(value = "File: j120{par}_1 (1 to 48/60)", example = "1") @PathVariable Integer par,
-            @ApiParam(value = "File: j1201_{inst} (1 to 10)", example = "1") @PathVariable Integer inst) throws IOException {
-        LOGGER.info("Fetch project from file (size=" + size + ", par=" + par + ", inst=" + inst + ")");
-        ProjectReader reader = new ProjectReader();
-        return ResponseEntity.ok(
-                reader.parseProject("projects/j" + size + "/j" + size + par + "_" + inst + ".sm"));
-    }
-
-    @ApiOperation("Get a set of data from a file.")
+    @ApiOperation("Get a set of data from a file. Response layers: size > par > inst.")
     @GetMapping(path = "/data/options", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<Integer, Map<Integer, List<Integer>>>> getProjectOptions() {
         return ResponseEntity.ok(dbService.selectProjectOptions());
@@ -66,6 +53,19 @@ public class DataController {
                         dbService.selectProject(size, par, inst)));
     }
 
+    @Deprecated
+    @ApiOperation("Get a set of data from a file.")
+    @GetMapping(path = "/file/{size}/{par}/{inst}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Project> getProject(
+            @ApiParam(value = "File: j{size}1_1 (30/60/90/120)", example = "30") @PathVariable Integer size,
+            @ApiParam(value = "File: j120{par}_1 (1 to 48/60)", example = "1") @PathVariable Integer par,
+            @ApiParam(value = "File: j1201_{inst} (1 to 10)", example = "1") @PathVariable Integer inst) throws IOException {
+        LOGGER.info("Fetch project from file (size=" + size + ", par=" + par + ", inst=" + inst + ")");
+        ProjectReader reader = new ProjectReader();
+        return ResponseEntity.ok(
+                reader.parseProject("projects/j" + size + "/j" + size + par + "_" + inst + ".sm"));
+    }
+
     @ApiOperation("Get a list of solutions for a project from the database.")
     @GetMapping(path = "/solution/{size}/{par}/{inst}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<StoredSolution>> getSolutionFromDatabase(
@@ -74,14 +74,14 @@ public class DataController {
             @ApiParam(value = "File: j1201_{inst} (1 to 10)", example = "1") @PathVariable Integer inst) {
         LOGGER.info("Fetch solutions from database (size=" + size + ", par=" + par + ", inst=" + inst + ")");
         return ResponseEntity.ok(
-                EntityMapper.mapSListToModel(
+                EntityMapper.mapToModel(
                         dbService.selectSolutions(size, par, inst)));
     }
 
     @ApiOperation("Save solution to the database.")
     @PostMapping(path = "/solution", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StoredSolution> saveSolutionToDatabase(
-            @ApiParam(value = "Creator ID", example = "AI") @RequestParam String creator,
+            @ApiParam(value = "Creator ID", example = "AI") @RequestParam(required = false) String creator,
             @RequestBody Project solution) throws InvalidObjectException {
         Feedback feedback = SolutionEvaluator.evaluate(solution, new Feedback());
         if (!feedback.isFeasible()) {

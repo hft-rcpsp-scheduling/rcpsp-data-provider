@@ -28,7 +28,8 @@ public class EvaluationController {
         List<Feedback> records = new MakespanReader().parseMakespans("makespans/j" + solution.getSize() + "hrs.sm");
         Feedback feedback = records.stream()
                 .filter(f -> f.getSize() == solution.getSize() && f.getPar() == solution.getPar() && f.getInst() == solution.getInst())
-                .findFirst().orElseThrow();
+                .findFirst()
+                .orElseThrow();
         SolutionEvaluator.evaluate(solution, feedback);
         LOGGER.info("Evaluated solution (feedback=" + feedback + ")");
         return ResponseEntity.ok(feedback);

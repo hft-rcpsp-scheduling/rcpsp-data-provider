@@ -10,9 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 @Component
@@ -58,7 +56,13 @@ public class DatabaseService {
 
     @Transactional
     public ProjectEntity selectProject(int size, int par, int inst) {
-        return projectRepo.getById("" + size + par + "_" + inst);
+        String id = "" + size + par + "_" + inst;
+        Optional<ProjectEntity> projectEntity = projectRepo.findById(id);
+        if (projectEntity.isPresent()) {
+            return projectEntity.get();
+        } else {
+            throw new NoSuchElementException("No project found with id=" + id);
+        }
     }
 
     @Transactional
