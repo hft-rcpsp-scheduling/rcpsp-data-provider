@@ -26,70 +26,71 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DatabaseServiceTest {
 
-    Project project;
-    Project solution;
+    Project project30_10_10;
+    Project solution40_10_10;
     @Autowired
     private DatabaseService projectDB;
 
     @BeforeAll
-    void setUp() throws IOException {
-        this.project = new ProjectReader().parseProject("projects/j30/j301_1.sm");
-        this.solution = DataGenerator.generateProject(1);
-        projectDB.insertProjects(
-                List.of(EntityMapper.mapToEntity(this.project), EntityMapper.mapToEntity(solution)));
+    void setUpProject3010_10() throws IOException {
+        this.project30_10_10 = new ProjectReader().parseProject("projects/j30/j3010_10.sm");
+        this.solution40_10_10 = DataGenerator.generateProject(1);
+        solution40_10_10.setSize(40);
+        solution40_10_10.setPar(10);
+        solution40_10_10.setInst(10);
+        projectDB.insertProjects(List.of(EntityMapper.mapToEntity(this.project30_10_10), EntityMapper.mapToEntity(this.solution40_10_10)));
     }
 
     @Test
     void selectProject() {
-        ProjectEntity entity = projectDB.selectProject(project.getSize(), project.getPar(), project.getInst());
-        assertEquals(project, EntityMapper.mapToModel(entity));
+        ProjectEntity entity = projectDB.selectProject(project30_10_10.getSize(), project30_10_10.getPar(), project30_10_10.getInst());
+        assertEquals(project30_10_10, EntityMapper.mapToModel(entity));
     }
 
     @Test
     @Order(1)
     void insertSolution() {
-        SolutionEntity entity = projectDB.insertSolution(solution, "tester");
+        SolutionEntity entity = projectDB.insertSolution(solution40_10_10, "tester");
         StoredSolution storedSolution = EntityMapper.mapToModel(entity);
 
         assertNotNull(storedSolution.getCreationDate());
         assertNotNull(storedSolution.getCreationTime());
 
-        assertEquals(solution.getSize(), storedSolution.getSize());
-        assertEquals(solution.getPar(), storedSolution.getPar());
-        assertEquals(solution.getInst(), storedSolution.getInst());
+        assertEquals(solution40_10_10.getSize(), storedSolution.getSize());
+        assertEquals(solution40_10_10.getPar(), storedSolution.getPar());
+        assertEquals(solution40_10_10.getInst(), storedSolution.getInst());
         assertEquals("tester", storedSolution.getCreator());
 
-        assertEquals(solution.getR1CapacityPerDay(), storedSolution.getR1CapacityPerDay());
-        assertEquals(solution.getR2CapacityPerDay(), storedSolution.getR2CapacityPerDay());
-        assertEquals(solution.getR3CapacityPerDay(), storedSolution.getR3CapacityPerDay());
-        assertEquals(solution.getR4CapacityPerDay(), storedSolution.getR4CapacityPerDay());
+        assertEquals(solution40_10_10.getR1CapacityPerDay(), storedSolution.getR1CapacityPerDay());
+        assertEquals(solution40_10_10.getR2CapacityPerDay(), storedSolution.getR2CapacityPerDay());
+        assertEquals(solution40_10_10.getR3CapacityPerDay(), storedSolution.getR3CapacityPerDay());
+        assertEquals(solution40_10_10.getR4CapacityPerDay(), storedSolution.getR4CapacityPerDay());
 
-        assertEquals(solution.getHorizon(), storedSolution.getHorizon());
-
-        assertEquals(solution.getJobs(), storedSolution.getJobs());
+        assertEquals(solution40_10_10.getHorizon(), storedSolution.getHorizon());
+        assertEquals(solution40_10_10.getJobs(), storedSolution.getJobs());
     }
 
     @Test
     @Order(2)
     void selectSolutions() {
-        SolutionEntity entity = projectDB.selectSolutions(solution.getSize(), solution.getPar(), solution.getInst()).get(0);
+        SolutionEntity entity = projectDB.selectSolutions(solution40_10_10.getSize(), solution40_10_10.getPar(), solution40_10_10.getInst()).get(0);
         StoredSolution storedSolution = EntityMapper.mapToModel(entity);
 
         assertNotNull(storedSolution.getCreationDate());
         assertNotNull(storedSolution.getCreationTime());
 
-        assertEquals(solution.getSize(), storedSolution.getSize());
-        assertEquals(solution.getPar(), storedSolution.getPar());
-        assertEquals(solution.getInst(), storedSolution.getInst());
+        assertEquals(solution40_10_10.getSize(), storedSolution.getSize());
+        assertEquals(solution40_10_10.getPar(), storedSolution.getPar());
+        assertEquals(solution40_10_10.getInst(), storedSolution.getInst());
         assertEquals("tester", storedSolution.getCreator());
 
-        assertEquals(solution.getR1CapacityPerDay(), storedSolution.getR1CapacityPerDay());
-        assertEquals(solution.getR2CapacityPerDay(), storedSolution.getR2CapacityPerDay());
-        assertEquals(solution.getR3CapacityPerDay(), storedSolution.getR3CapacityPerDay());
-        assertEquals(solution.getR4CapacityPerDay(), storedSolution.getR4CapacityPerDay());
+        assertEquals(solution40_10_10.getR1CapacityPerDay(), storedSolution.getR1CapacityPerDay());
+        assertEquals(solution40_10_10.getR2CapacityPerDay(), storedSolution.getR2CapacityPerDay());
+        assertEquals(solution40_10_10.getR3CapacityPerDay(), storedSolution.getR3CapacityPerDay());
+        assertEquals(solution40_10_10.getR4CapacityPerDay(), storedSolution.getR4CapacityPerDay());
 
-        assertEquals(solution.getHorizon(), storedSolution.getHorizon());
+        assertEquals(solution40_10_10.getHorizon(), storedSolution.getHorizon());
 
-        assertEquals(solution.getJobs(), storedSolution.getJobs());
+        assertEquals(solution40_10_10.getJobs(), storedSolution.getJobs());
     }
 }

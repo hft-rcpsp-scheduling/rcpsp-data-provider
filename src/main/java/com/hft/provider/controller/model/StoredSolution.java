@@ -5,8 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.time.OffsetTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +15,9 @@ public class StoredSolution {
     @ApiModelProperty(value = "Database ID", example = "123")
     private long id;
     @ApiModelProperty(value = "Creation date", example = "2010-01-10")
-    private LocalDate creationDate;
+    private String creationDate;
     @ApiModelProperty(value = "Creation time", example = "14:59:48.907000+00:00")
-    private OffsetTime creationTime;
+    private String creationTime;
     @ApiModelProperty(value = "Creator of the solution", example = "AI")
     private String creator;
     // identifier from file

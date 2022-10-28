@@ -1,6 +1,7 @@
 package com.hft.provider.controller;
 
 import com.hft.provider.Application;
+import com.hft.provider.controller.model.Error;
 import com.hft.provider.controller.model.Project;
 import com.hft.provider.file.ProjectReader;
 import org.junit.jupiter.api.MethodOrderer;
@@ -17,6 +18,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import utility.JsonFactory;
 
+import java.io.IOException;
+import java.util.NoSuchElementException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -47,5 +52,45 @@ class EvaluationControllerTest {
                 .andReturn();
 
         assertNotNull(result);
+    }
+
+    @Test
+    void noSuchFile() throws Exception {
+        String requestJson = JsonFactory.convertToJson(new Project());
+        MvcResult result = mockMvc.perform(
+                        post("/api/eval")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .characterEncoding("UTF-8")
+                                .content(requestJson))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        Error error = JsonFactory.convertToObject(result, Error.class);
+        assertNotNull(error);
+        assertEquals(404, error.getStatus());
+        assertEquals(IOException.class.getSimpleName(), error.getOrigin());
+        assertEquals("/api/eval", error.getPath());
+    }
+
+    @Test
+    void noSuchElement() throws Exception {
+        Project project = new Project();
+        project.setSize(30);
+        String requestJson = JsonFactory.convertToJson(project);
+        MvcResult result = mockMvc.perform(
+                        post("/api/eval")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .characterEncoding("UTF-8")
+                                .content(requestJson))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        Error error = JsonFactory.convertToObject(result, Error.class);
+        assertNotNull(error);
+        assertEquals(404, error.getStatus());
+        assertEquals(NoSuchElementException.class.getSimpleName(), error.getOrigin());
+        assertEquals("/api/eval", error.getPath());
     }
 }

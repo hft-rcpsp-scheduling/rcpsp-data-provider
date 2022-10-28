@@ -43,16 +43,17 @@ public class EntityMapper {
         return projectEntity;
     }
 
-    public static List<StoredSolution> mapSListToModel(List<SolutionEntity> entities) {
+    public static List<StoredSolution> mapToModel(List<SolutionEntity> entities) {
         return entities.stream().map(EntityMapper::mapToModel).collect(Collectors.toList());
     }
 
     public static StoredSolution mapToModel(SolutionEntity entity) {
         StoredSolution model = new StoredSolution();
         model.setId(entity.getId());
-        model.setCreationDate(entity.getCreationDate());
-        model.setCreationTime(entity.getCreationTime());
+        model.setCreationDate(entity.getCreationDate().toString());
+        model.setCreationTime(entity.getCreationTime().toString());
         model.setCreator(entity.getCreator());
+        model.setSize(entity.getProjectEntity().getSize());
         model.setPar(entity.getProjectEntity().getPar());
         model.setInst(entity.getProjectEntity().getInst());
         model.setR1CapacityPerDay(entity.getProjectEntity().getR1Capacity());
@@ -71,10 +72,6 @@ public class EntityMapper {
         }).toList()));
         model.getJobs().sort(Comparator.comparingInt(Job::getNr));
         return model;
-    }
-
-    public static List<Project> mapPListToModel(List<ProjectEntity> entities) {
-        return entities.stream().map(EntityMapper::mapToModel).collect(Collectors.toList());
     }
 
     public static Project mapToModel(ProjectEntity entity) {
