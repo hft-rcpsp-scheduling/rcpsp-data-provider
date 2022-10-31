@@ -83,8 +83,12 @@ public class DataGenerator {
         return project;
     }
 
+    public static Project readProject(int size, int par, int inst) throws IOException {
+        return new ProjectReader().parseProject("projects/j" + size + "/j" + size + par + "_" + inst + ".sm");
+    }
+
     public static Project generateSimpleSolution(int size, int par, int inst) throws IOException {
-        Project project = new ProjectReader().parseProject("projects/j" + size + "/j" + size + par + "_" + inst + ".sm");
+        Project project = readProject(size, par, inst);
         Map<Integer, Job> map = project.getJobs().stream().collect(Collectors.toMap(Job::getNr, Function.identity()));
 
         int currentTime = 0;

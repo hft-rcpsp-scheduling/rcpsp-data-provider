@@ -118,8 +118,11 @@ public class EntityMapper {
     private static Job mapToModel(SolutionDetailEntity detail) throws JsonProcessingException {
         Job model = new Job();
         model.setNr(detail.getJobNr());
+        model.setSuccessorCount(detail.getJobEntity().getSuccessorCount());
         model.setSuccessors(detail.getJobEntity().getSuccessors());
+        model.setPredecessorCount(detail.getJobEntity().getPredecessorCount());
         model.setPredecessors(detail.getJobEntity().getPredecessors());
+        model.setMode(detail.getJobEntity().getMode());
         model.setDurationDays(detail.getJobEntity().getDuration());
         model.setR1HoursPerDay(detail.getJobEntity().getR1());
         model.setR2HoursPerDay(detail.getJobEntity().getR2());
