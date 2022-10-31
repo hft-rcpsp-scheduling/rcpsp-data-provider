@@ -34,7 +34,7 @@ class DatabaseServiceTest {
     @BeforeAll
     void setUpProject3010_10() throws IOException {
         this.project30_10_10 = new ProjectReader().parseProject("projects/j30/j3010_10.sm");
-        this.solution40_10_10 = DataGenerator.generateProject(1);
+        this.solution40_10_10 = DataGenerator.generateMockSolution(1);
         solution40_10_10.setSize(40);
         solution40_10_10.setPar(10);
         solution40_10_10.setInst(10);

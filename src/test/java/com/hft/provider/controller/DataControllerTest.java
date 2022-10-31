@@ -51,7 +51,7 @@ class DataControllerTest {
     @BeforeAll
     void setUp() throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         this.project30_1_1 = new ProjectReader().parseProject("projects/j30/j301_1.sm");
-        this.solution40_1_1 = DataGenerator.generateProject(1);
+        this.solution40_1_1 = DataGenerator.generateMockSolution(1);
         solution40_1_1.setSize(40);
         solution40_1_1.setPar(1);
         solution40_1_1.setInst(1);
