@@ -19,7 +19,7 @@ class SolutionEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "project_id", nullable = false)
     private ProjectEntity projectEntity;
     @Column(name = "creation_date", columnDefinition = "DATE")

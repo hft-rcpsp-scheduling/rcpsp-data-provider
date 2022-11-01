@@ -21,7 +21,6 @@ import utility.JsonFactory;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -51,7 +50,7 @@ class DataControllerTest {
     private DatabaseService projectDB;
 
     @BeforeAll
-    void setUp() throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    void setUp() throws IOException {
         this.project30_1_1 = DataGenerator.readProject(30, 1, 1);
         this.solution30_1_1 = DataGenerator.generateSimpleSolution(30, 1, 1);
         projectDB.insertProjects(List.of(EntityMapper.mapToEntity(this.project30_1_1)));
@@ -173,7 +172,6 @@ class DataControllerTest {
         assertEquals("/api/solution", error.getPath());
     }
 
-    @Disabled // TODO
     @Test
     @Order(1)
     void saveSolutionToDatabase() throws Exception {
@@ -211,7 +209,6 @@ class DataControllerTest {
         assertEquals(expectedJobs, actualJobs);
     }
 
-    @Disabled // TODO
     @Test
     @Order(2)
     void selectSolutions() throws Exception {
