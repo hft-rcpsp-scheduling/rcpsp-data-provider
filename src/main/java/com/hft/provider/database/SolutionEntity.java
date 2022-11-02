@@ -28,6 +28,8 @@ class SolutionEntity {
     private OffsetTime creationTime;
     @Column(name = "creator")
     private String creator;
+    @Column(name = "makespan")
+    private int makespan;
     @OneToMany(mappedBy = "solutionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SolutionDetailEntity> detailEntities;
 
@@ -46,6 +48,10 @@ class SolutionEntity {
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    public void setMakespan(int makespan) {
+        this.makespan = makespan;
     }
 
     public void addDetail(SolutionDetailEntity detail) {

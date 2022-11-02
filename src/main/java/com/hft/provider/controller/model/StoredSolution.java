@@ -20,6 +20,8 @@ public class StoredSolution {
     private String creationTime;
     @ApiModelProperty(value = "Creator of the solution", example = "AI")
     private String creator;
+    @ApiModelProperty(value = "Time span of the solution.", example = "168")
+    private int makespan;
     // identifier from file
     @ApiModelProperty(value = "File identifier: File: j{size}1_1", example = "120")
     private int size;

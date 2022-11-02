@@ -81,6 +81,10 @@ public class DatabaseService {
                     new SolutionDetailEntity(solutionEntity, jobEntity)
                             .setStartDay(job.getStartDay()));
         }
+        solutionEntity.setMakespan(solution.getJobs()
+                .stream().filter(job -> job.getNr() == solution.getJobs().size())
+                .findFirst().orElseThrow()
+                .getStartDay());
         return solutionRepo.save(solutionEntity);
     }
 

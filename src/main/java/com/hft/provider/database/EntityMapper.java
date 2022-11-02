@@ -53,6 +53,7 @@ public class EntityMapper {
         model.setCreationDate(entity.getCreationDate().toString());
         model.setCreationTime(entity.getCreationTime().toString());
         model.setCreator(entity.getCreator());
+        model.setMakespan(entity.getMakespan());
         model.setSize(entity.getProjectEntity().getSize());
         model.setPar(entity.getProjectEntity().getPar());
         model.setInst(entity.getProjectEntity().getInst());
