@@ -50,8 +50,8 @@ public class EntityMapper {
     public static StoredSolution mapToModel(SolutionEntity entity) {
         StoredSolution model = new StoredSolution();
         model.setId(entity.getId());
-        model.setCreationDate(entity.getCreationDate().toString());
-        model.setCreationTime(entity.getCreationTime().toString());
+        model.setCreationDate(entity.getCreationDate());
+        model.setCreationTime(entity.getCreationTime());
         model.setCreator(entity.getCreator());
         model.setMakespan(entity.getMakespan());
         model.setSize(entity.getProjectEntity().getSize());
