@@ -89,12 +89,12 @@ public class DatabaseService {
 
     /**
      * Persist entities without existence check. Improves performance, but is not as secure.
-     * Protected for only internal usage.
+     * Only internal usage.
      *
      * @param entities to persist.
      */
     @Transactional
-    protected void insertProjects(List<ProjectEntity> entities) {
+    public void insertProjects(List<ProjectEntity> entities) {
         LOGGER.info("Starting to save " + entities.size() + " projects to the database.");
         projectRepo.saveAllFast(entities);
         LOGGER.info("Finished saving projects to the database.");

@@ -18,7 +18,7 @@ class JobEntity implements Serializable {
     @Id
     @Column(name = "id", nullable = false)
     private String id;
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
     private ProjectEntity projectEntity;
     @Column(name = "nr", nullable = false)

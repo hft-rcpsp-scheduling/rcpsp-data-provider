@@ -2,11 +2,11 @@ package com.hft.provider.controller;
 
 import com.hft.provider.Application;
 import com.hft.provider.controller.model.Error;
+import com.hft.provider.controller.model.Job;
 import com.hft.provider.controller.model.Project;
 import com.hft.provider.controller.model.StoredSolution;
 import com.hft.provider.database.DatabaseService;
 import com.hft.provider.database.EntityMapper;
-import com.hft.provider.file.ProjectReader;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,8 +21,8 @@ import utility.JsonFactory;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -43,22 +43,17 @@ class DataControllerTest {
     @Autowired
     protected MockMvc mockMvc;
 
+    Project solution30_1_1;
+
     Project project30_1_1;
-    Project solution40_1_1;
     @Autowired
     private DatabaseService projectDB;
 
     @BeforeAll
-    void setUp() throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        this.project30_1_1 = new ProjectReader().parseProject("projects/j30/j301_1.sm");
-        this.solution40_1_1 = DataGenerator.generateProject(1);
-        solution40_1_1.setSize(40);
-        solution40_1_1.setPar(1);
-        solution40_1_1.setInst(1);
-        Method method = DatabaseService.class.getDeclaredMethod("insertProjects", List.class);
-        method.setAccessible(true);
-        method.invoke(projectDB, List.of(EntityMapper.mapToEntity(this.project30_1_1), EntityMapper.mapToEntity(this.solution40_1_1)));
-        // TODO this does not work... fix this to enable the 2 tests
+    void setUp() throws IOException {
+        this.project30_1_1 = DataGenerator.readProject(30, 1, 1);
+        this.solution30_1_1 = DataGenerator.generateSimpleSolution(30, 1, 1);
+        projectDB.insertProjects(List.of(EntityMapper.mapToEntity(this.project30_1_1)));
     }
 
     @Test
@@ -177,11 +172,10 @@ class DataControllerTest {
         assertEquals("/api/solution", error.getPath());
     }
 
-    @Disabled // TODO
     @Test
     @Order(1)
     void saveSolutionToDatabase() throws Exception {
-        String requestJson = JsonFactory.convertToJson(solution40_1_1);
+        String requestJson = JsonFactory.convertToJson(solution30_1_1);
         MvcResult result = mockMvc.perform(
                         post("/api/solution?creator=tester")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -196,27 +190,30 @@ class DataControllerTest {
         assertNotNull(storedSolution.getCreationDate());
         assertNotNull(storedSolution.getCreationTime());
 
-        assertEquals(solution40_1_1.getSize(), storedSolution.getSize());
-        assertEquals(solution40_1_1.getPar(), storedSolution.getPar());
-        assertEquals(solution40_1_1.getInst(), storedSolution.getInst());
+        assertEquals(solution30_1_1.getSize(), storedSolution.getSize());
+        assertEquals(solution30_1_1.getPar(), storedSolution.getPar());
+        assertEquals(solution30_1_1.getInst(), storedSolution.getInst());
         assertEquals("tester", storedSolution.getCreator());
 
-        assertEquals(solution40_1_1.getR1CapacityPerDay(), storedSolution.getR1CapacityPerDay());
-        assertEquals(solution40_1_1.getR2CapacityPerDay(), storedSolution.getR2CapacityPerDay());
-        assertEquals(solution40_1_1.getR3CapacityPerDay(), storedSolution.getR3CapacityPerDay());
-        assertEquals(solution40_1_1.getR4CapacityPerDay(), storedSolution.getR4CapacityPerDay());
+        assertEquals(solution30_1_1.getR1CapacityPerDay(), storedSolution.getR1CapacityPerDay());
+        assertEquals(solution30_1_1.getR2CapacityPerDay(), storedSolution.getR2CapacityPerDay());
+        assertEquals(solution30_1_1.getR3CapacityPerDay(), storedSolution.getR3CapacityPerDay());
+        assertEquals(solution30_1_1.getR4CapacityPerDay(), storedSolution.getR4CapacityPerDay());
 
-        assertEquals(solution40_1_1.getHorizon(), storedSolution.getHorizon());
+        assertEquals(solution30_1_1.getHorizon(), storedSolution.getHorizon());
 
-        assertEquals(solution40_1_1.getJobs(), storedSolution.getJobs());
+        ArrayList<Job> expectedJobs = new ArrayList<>(solution30_1_1.getJobs());
+        expectedJobs.sort(Comparator.comparingInt(Job::getNr));
+        ArrayList<Job> actualJobs = new ArrayList<>(storedSolution.getJobs());
+        actualJobs.sort(Comparator.comparingInt(Job::getNr));
+        assertEquals(expectedJobs, actualJobs);
     }
 
-    @Disabled // TODO
     @Test
     @Order(2)
     void selectSolutions() throws Exception {
         MvcResult result = mockMvc.perform(
-                        get("/api/solution/" + solution40_1_1.getSize() + "/" + solution40_1_1.getPar() + "/" + solution40_1_1.getInst())
+                        get("/api/solution/" + solution30_1_1.getSize() + "/" + solution30_1_1.getPar() + "/" + solution30_1_1.getInst())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .characterEncoding("UTF-8"))
                 .andExpect(status().isOk())
@@ -231,18 +228,22 @@ class DataControllerTest {
         assertNotNull(storedSolution.getCreationDate());
         assertNotNull(storedSolution.getCreationTime());
 
-        assertEquals(solution40_1_1.getSize(), storedSolution.getSize());
-        assertEquals(solution40_1_1.getPar(), storedSolution.getPar());
-        assertEquals(solution40_1_1.getInst(), storedSolution.getInst());
+        assertEquals(solution30_1_1.getSize(), storedSolution.getSize());
+        assertEquals(solution30_1_1.getPar(), storedSolution.getPar());
+        assertEquals(solution30_1_1.getInst(), storedSolution.getInst());
         assertEquals("tester", storedSolution.getCreator());
 
-        assertEquals(solution40_1_1.getR1CapacityPerDay(), storedSolution.getR1CapacityPerDay());
-        assertEquals(solution40_1_1.getR2CapacityPerDay(), storedSolution.getR2CapacityPerDay());
-        assertEquals(solution40_1_1.getR3CapacityPerDay(), storedSolution.getR3CapacityPerDay());
-        assertEquals(solution40_1_1.getR4CapacityPerDay(), storedSolution.getR4CapacityPerDay());
+        assertEquals(solution30_1_1.getR1CapacityPerDay(), storedSolution.getR1CapacityPerDay());
+        assertEquals(solution30_1_1.getR2CapacityPerDay(), storedSolution.getR2CapacityPerDay());
+        assertEquals(solution30_1_1.getR3CapacityPerDay(), storedSolution.getR3CapacityPerDay());
+        assertEquals(solution30_1_1.getR4CapacityPerDay(), storedSolution.getR4CapacityPerDay());
 
-        assertEquals(solution40_1_1.getHorizon(), storedSolution.getHorizon());
+        assertEquals(solution30_1_1.getHorizon(), storedSolution.getHorizon());
 
-        assertEquals(solution40_1_1.getJobs(), storedSolution.getJobs());
+        ArrayList<Job> expectedJobs = new ArrayList<>(solution30_1_1.getJobs());
+        expectedJobs.sort(Comparator.comparingInt(Job::getNr));
+        ArrayList<Job> actualJobs = new ArrayList<>(storedSolution.getJobs());
+        actualJobs.sort(Comparator.comparingInt(Job::getNr));
+        assertEquals(expectedJobs, actualJobs);
     }
 }

@@ -2,9 +2,15 @@ package utility;
 
 import com.hft.provider.controller.model.Job;
 import com.hft.provider.controller.model.Project;
+import com.hft.provider.file.ProjectReader;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class DataGenerator {
 
@@ -12,7 +18,7 @@ public class DataGenerator {
      * @param option 0 = null, 1 = valid, 2 = resources, 3 = relationships, 4 = resources & relationships
      * @return project for testing
      */
-    public static Project generateProject(int option) {
+    public static Project generateMockSolution(int option) {
         Project project = new Project();
         project.setR1CapacityPerDay(1);
         project.setR2CapacityPerDay(1);
@@ -74,6 +80,37 @@ public class DataGenerator {
         }
         project.setJobCount(3);
         project.setJobs(Arrays.asList(job1, job2, job3));
+        return project;
+    }
+
+    public static Project readProject(int size, int par, int inst) throws IOException {
+        return new ProjectReader().parseProject("projects/j" + size + "/j" + size + par + "_" + inst + ".sm");
+    }
+
+    public static Project generateSimpleSolution(int size, int par, int inst) throws IOException {
+        Project project = readProject(size, par, inst);
+        Map<Integer, Job> map = project.getJobs().stream().collect(Collectors.toMap(Job::getNr, Function.identity()));
+
+        int currentTime = 0;
+
+        Job startJob = map.get(1);
+        startJob.setStartDay(currentTime);
+        currentTime += startJob.getDurationDays();
+        map.put(startJob.getNr(), startJob);
+
+        while (map.get(project.getJobCount()).getStartDay() == null) {
+            for (Job job : map.values()) {
+                if (job.getStartDay() != null) continue;
+                Optional<Integer> unscheduledPredecessorNr = job.getPredecessors().stream()
+                        .filter(jobNr -> map.get(jobNr).getStartDay() == null).findFirst();
+                if (unscheduledPredecessorNr.isPresent()) continue;
+
+                job.setStartDay(currentTime);
+                currentTime += job.getDurationDays();
+                map.put(job.getNr(), job);
+            }
+        }
+        project.setJobs(map.values().stream().toList());
         return project;
     }
 }
