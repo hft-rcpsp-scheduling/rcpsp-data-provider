@@ -72,6 +72,13 @@ public class DatabaseService {
     }
 
     /**
+     * @return all options for solution creators
+     */
+    public List<String> selectCreatorOptions() {
+        return solutionRepo.getCreatorOptions();
+    }
+
+    /**
      * @param size required identifier
      * @param par  required identifier
      * @param inst required identifier

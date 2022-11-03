@@ -36,10 +36,16 @@ public class DataController {
         this.dbService = dbService;
     }
 
-    @ApiOperation("Get a set of data from a file. Response layers: size > par > inst.")
+    @ApiOperation("Get options for data identifiers. Response layers: size > par > inst.")
     @GetMapping(path = "/data/options", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<Integer, Map<Integer, List<Integer>>>> getProjectOptions() {
         return ResponseEntity.ok(dbService.selectProjectOptions());
+    }
+
+    @ApiOperation("Get a list of creators that saved solutions.")
+    @GetMapping(path = "/solution/creators", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getSolutionCreators() {
+        return ResponseEntity.ok(dbService.selectCreatorOptions());
     }
 
     @ApiOperation("Get a set of data from the database (equivalent to file).")
