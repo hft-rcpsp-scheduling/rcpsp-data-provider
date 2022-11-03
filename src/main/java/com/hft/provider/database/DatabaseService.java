@@ -2,6 +2,9 @@ package com.hft.provider.database;
 
 import com.hft.provider.controller.model.Job;
 import com.hft.provider.controller.model.Project;
+import com.hft.provider.controller.model.StoredSolution;
+import com.hft.provider.database.jdbc.ProjectSelector;
+import com.hft.provider.database.jdbc.SolutionSelector;
 import com.hft.provider.file.ProjectReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -20,9 +24,19 @@ public class DatabaseService {
     private final ProjectRepo projectRepo;
     private final JobRepo jobRepo;
     private final SolutionRepo solutionRepo;
+    private final ProjectSelector projectSelector;
+    private final SolutionSelector solutionSelector;
 
     @Autowired
-    public DatabaseService(ProjectRepo projectRepo, SolutionRepo solutionRepo, JobRepo jobRepo, @Value("${spring.datasource.url}") String datasource, @Value("${spring.sql.init.mode}") String initMode) {
+    public DatabaseService(ProjectRepo projectRepo,
+                           SolutionRepo solutionRepo,
+                           JobRepo jobRepo,
+                           ProjectSelector projectSelector,
+                           SolutionSelector solutionSelector,
+                           @Value("${spring.datasource.url}") String datasource,
+                           @Value("${spring.sql.init.mode}") String initMode) {
+        this.projectSelector = projectSelector;
+        this.solutionSelector = solutionSelector;
         LOGGER.info("Datasource=(" + datasource + ") with Init-Mode=(" + initMode + ")");
         this.initMode = initMode;
         this.projectRepo = projectRepo;
@@ -43,6 +57,9 @@ public class DatabaseService {
         insertProjects(parseAllProjects());
     }
 
+    /**
+     * @return all options for project identifier
+     */
     public Map<Integer, Map<Integer, List<Integer>>> selectProjectOptions() {
         Map<Integer, Map<Integer, List<Integer>>> options = new HashMap<>();
         for (int size : projectRepo.getSizeOptions()) {
@@ -54,8 +71,14 @@ public class DatabaseService {
         return options;
     }
 
-    @Transactional
-    public ProjectEntity selectProject(int size, int par, int inst) {
+    /**
+     * @param size required identifier
+     * @param par  required identifier
+     * @param inst required identifier
+     * @return matching entity
+     * @throws NoSuchElementException if no element found
+     */
+    public ProjectEntity selectProject(int size, int par, int inst) throws NoSuchElementException {
         String id = "" + size + par + "_" + inst;
         Optional<ProjectEntity> projectEntity = projectRepo.findById(id);
         if (projectEntity.isPresent()) {
@@ -65,11 +88,35 @@ public class DatabaseService {
         }
     }
 
-    @Transactional
-    public List<SolutionEntity> selectSolutions(int size, int par, int inst) {
-        return solutionRepo.findSolutionsByProject("" + size + par + "_" + inst);
+    /**
+     * @return all projects
+     * @throws SQLException if a database access error occurs or this method is called on a closed result set
+     * @throws IOException  if file not found
+     */
+    public List<Project> selectAllProjects() throws SQLException, IOException {
+        return projectSelector.selectProjects();
     }
 
+    /**
+     * @param creator null or creator condition
+     * @param size    null or size condition
+     * @param par     null or par condition
+     * @param inst    null or inst condition
+     * @return all matching solutions
+     * @throws SQLException if a database access error occurs or this method is called on a closed result set
+     * @throws IOException  if file not found
+     */
+    public List<StoredSolution> selectSolutions(String creator, Integer size, Integer par, Integer inst) throws SQLException, IOException {
+        return solutionSelector.selectSolutions(creator, size, par, inst);
+    }
+
+    /**
+     * Builds solution entity and links it to related entries (project & jobs).
+     *
+     * @param solution with valid data
+     * @param creator  null or creator field
+     * @return saved solution with generated ID
+     */
     @Transactional
     public SolutionEntity insertSolution(Project solution, String creator) {
         ProjectEntity projectEntity = selectProject(solution.getSize(), solution.getPar(), solution.getInst());

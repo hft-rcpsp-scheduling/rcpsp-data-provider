@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -53,6 +54,13 @@ public class DataController {
                         dbService.selectProject(size, par, inst)));
     }
 
+    @ApiOperation("Get all sets of projects from the database.")
+    @GetMapping(path = "/data", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Project>> getAllProjectsFromDatabase() throws SQLException, IOException {
+        return ResponseEntity.ok(
+                dbService.selectAllProjects());
+    }
+
     @Deprecated
     @ApiOperation("Get a set of data from a file.")
     @GetMapping(path = "/file/{size}/{par}/{inst}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -66,16 +74,29 @@ public class DataController {
                 reader.parseProject("projects/j" + size + "/j" + size + par + "_" + inst + ".sm"));
     }
 
+    @Deprecated
     @ApiOperation("Get a list of solutions for a project from the database.")
     @GetMapping(path = "/solution/{size}/{par}/{inst}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<StoredSolution>> getSolutionFromDatabase(
             @ApiParam(value = "File: j{size}1_1 (30/60/90/120)", example = "30") @PathVariable Integer size,
             @ApiParam(value = "File: j120{par}_1 (1 to 48/60)", example = "1") @PathVariable Integer par,
-            @ApiParam(value = "File: j1201_{inst} (1 to 10)", example = "1") @PathVariable Integer inst) {
+            @ApiParam(value = "File: j1201_{inst} (1 to 10)", example = "1") @PathVariable Integer inst) throws SQLException, IOException {
         LOGGER.info("Fetch solutions from database (size=" + size + ", par=" + par + ", inst=" + inst + ")");
         return ResponseEntity.ok(
-                EntityMapper.mapToModel(
-                        dbService.selectSolutions(size, par, inst)));
+                dbService.selectSolutions(null, size, par, inst));
+    }
+
+
+    @ApiOperation("Get a list of solutions from the database. All parameters are optional.")
+    @GetMapping(path = "/solution", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<StoredSolution>> getSolutionFromDatabaseWithConditions(
+            @ApiParam(value = "Creator of a solution (optional)", example = "AI") @RequestParam(required = false) String creator,
+            @ApiParam(value = "File: j{size}1_1 (30/60/90/120) (optional)", example = "30") @RequestParam(required = false) Integer size,
+            @ApiParam(value = "File: j120{par}_1 (1 to 48/60) (optional)", example = "1") @RequestParam(required = false) Integer par,
+            @ApiParam(value = "File: j1201_{inst} (1 to 10) (optional)", example = "1") @RequestParam(required = false) Integer inst) throws SQLException, IOException {
+        LOGGER.info("Fetch solutions from database (creator= " + creator + ", size=" + size + ", par=" + par + ", inst=" + inst + ")");
+        return ResponseEntity.ok(
+                dbService.selectSolutions(creator, size, par, inst));
     }
 
     @ApiOperation("Save solution to the database.")
