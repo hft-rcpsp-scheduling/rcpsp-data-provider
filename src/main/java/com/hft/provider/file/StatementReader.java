@@ -11,6 +11,10 @@ public class StatementReader extends FileReader {
         return readSqlStatement("select-solutions.sql");
     }
 
+    public String readSelectProjects() throws IOException {
+        return readSqlStatement("select-projects.sql");
+    }
+
     // === PRIVATE =====================================================================================================
 
     /**
