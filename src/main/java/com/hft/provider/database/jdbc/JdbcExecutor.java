@@ -12,7 +12,7 @@ import java.sql.SQLException;
 class JdbcExecutor {
     // private static final String MYSQL_DRIVER_NAME = "com.mysql.jdbc.Driver";
     private static final String MYSQL_DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
-    protected boolean showSQL;
+    protected boolean showSQL = false;
     @Value("${spring.datasource.url}")
     private String dbUrl;
     @Value("${spring.datasource.username}")
@@ -37,6 +37,7 @@ class JdbcExecutor {
 
     /**
      * Creates connection to the default database from the application.properties.
+     * <p>Note: Dont forget to close the connection!</p>
      *
      * @return JDBC connection
      * @throws SQLException if a database access error occurs or the url is null

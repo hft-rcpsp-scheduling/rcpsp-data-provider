@@ -18,6 +18,18 @@ import java.util.logging.Logger;
 public class ProjectSelector extends JdbcExecutor {
     private final Logger LOGGER = Logger.getLogger(ProjectSelector.class.getName());
 
+    /**
+     * <ol>
+     *     <li>Reads statement from file resource.</li>
+     *     <li>Connect to the database.</li>
+     *     <li>Execute sql statement.</li>
+     *     <li>Retrieve data.</li>
+     * </ol>
+     *
+     * @return parsed project set
+     * @throws IOException  if file not found
+     * @throws SQLException if a database access error occurs or this method is called on a closed result set
+     */
     public List<Project> selectProjects() throws IOException, SQLException {
         String selectString = new StatementReader().readSelectProjects();
 

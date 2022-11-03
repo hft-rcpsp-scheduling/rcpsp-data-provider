@@ -22,8 +22,10 @@ public class SolutionSelector extends JdbcExecutor {
     /**
      * <ol>
      *     <li>Reads statement from file resource.</li>
-     *     <li>Connect to default database.</li>
-     *     <li>Execute static sql statement.</li>
+     *     <li>Append conditions.</li>
+     *     <li>Connect to the database.</li>
+     *     <li>Execute sql statement.</li>
+     *     <li>Retrieve data.</li>
      * </ol>
      *
      * @param creator null or creator condition

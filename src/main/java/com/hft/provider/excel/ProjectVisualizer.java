@@ -17,6 +17,11 @@ public class ProjectVisualizer extends ExcelGenerator {
         super();
     }
 
+    /**
+     * @param solution with data that fits the format
+     * @return workbook file with 'visualization' and 'data' sheet
+     * @throws IOException if the file exists but is a directory rather than a regular file, does not exist but cannot be created, or cannot be opened for any other reason
+     */
     public static File convert(Project solution) throws IOException {
         ProjectVisualizer generator = new ProjectVisualizer();
         Sheet visualSheet = generator.createSheet("Visualization");

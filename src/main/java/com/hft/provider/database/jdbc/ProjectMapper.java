@@ -10,6 +10,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Mapper to retrieve {@link Project} from a {@link ResultSet}.
+ *
+ * <ol>
+ *     <li>First {@link ProjectMapper#appendResult(ResultSet)} will add the general project data & the first job.</li>
+ *     <li>Every other {@link ProjectMapper#appendResult(ResultSet)} adds a new job.</li>
+ *     <li>{@link ProjectMapper#retrieveProject()} is used when the project is completed. Use a new object afterwards.</li>
+ * </ol>
+ */
 class ProjectMapper {
     private final Project project;
     private final List<Job> jobs;
@@ -21,6 +30,16 @@ class ProjectMapper {
         this.projectIsUndefined = true;
     }
 
+    /**
+     * <ol>
+     *     <li>First call will add the general project data & the first job.</li>
+     *     <li>Every other call adds a new job.</li>
+     * </ol>
+     *
+     * @param resultSet row of data
+     * @throws SQLException            if a column label does not match the result set
+     * @throws JsonProcessingException if an exception occurs by parsing the json arrays
+     */
     public void appendResult(ResultSet resultSet) throws SQLException, JsonProcessingException {
         if (projectIsUndefined) {
             project.setSize(resultSet.getInt("size"));
@@ -49,6 +68,12 @@ class ProjectMapper {
         jobs.add(job);
     }
 
+    /**
+     * Is used when the project is completed. Use a new object afterwards.
+     *
+     * @return project with appended data
+     * @throws IllegalStateException if project is still undefined
+     */
     public Project retrieveProject() throws IllegalStateException {
         if (projectIsUndefined) {
             throw new IllegalStateException("Project is still undefined.");

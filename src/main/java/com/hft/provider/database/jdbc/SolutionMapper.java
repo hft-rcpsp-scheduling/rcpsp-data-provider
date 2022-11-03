@@ -10,6 +10,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Mapper to retrieve {@link StoredSolution} from a {@link ResultSet}.
+ *
+ * <ol>
+ *     <li>First {@link SolutionMapper#appendResult(ResultSet)} will add the general solution data & the first job with details.</li>
+ *     <li>Every other {@link SolutionMapper#appendResult(ResultSet)} adds a new job with details.</li>
+ *     <li>{@link SolutionMapper#retrieveSolution()} ()} is used when the solution is completed. Use a new object afterwards.</li>
+ * </ol>
+ */
 class SolutionMapper {
 
     private final StoredSolution solution;
@@ -22,6 +31,16 @@ class SolutionMapper {
         this.solutionIsUndefined = true;
     }
 
+    /**
+     * <ol>
+     *     <li>First call will add the general solution data & the first job with details.</li>
+     *     <li>Every other call adds a new job with details.</li>
+     * </ol>
+     *
+     * @param resultSet row of data
+     * @throws SQLException            if a column label does not match the result set
+     * @throws JsonProcessingException if an exception occurs by parsing the json arrays
+     */
     public void appendResult(ResultSet resultSet) throws SQLException, JsonProcessingException {
         if (solutionIsUndefined) {
             solution.setId(resultSet.getLong("id"));
@@ -56,6 +75,12 @@ class SolutionMapper {
         jobs.add(job);
     }
 
+    /**
+     * Is used when the solution is completed. Use a new object afterwards.
+     *
+     * @return solution with appended data
+     * @throws IllegalStateException if solution is still undefined
+     */
     public StoredSolution retrieveSolution() throws IllegalStateException {
         if (solutionIsUndefined) {
             throw new IllegalStateException("Solution is still undefined.");
