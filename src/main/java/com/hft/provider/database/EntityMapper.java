@@ -7,9 +7,7 @@ import com.hft.provider.controller.model.StoredSolution;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class EntityMapper {
     private static final Logger LOGGER = Logger.getLogger(EntityMapper.class.getName());
@@ -43,16 +41,13 @@ public class EntityMapper {
         return projectEntity;
     }
 
-    public static List<StoredSolution> mapToModel(List<SolutionEntity> entities) {
-        return entities.stream().map(EntityMapper::mapToModel).collect(Collectors.toList());
-    }
-
     public static StoredSolution mapToModel(SolutionEntity entity) {
         StoredSolution model = new StoredSolution();
         model.setId(entity.getId());
-        model.setCreationDate(entity.getCreationDate().toString());
-        model.setCreationTime(entity.getCreationTime().toString());
+        model.setCreationDate(entity.getCreationDate());
+        model.setCreationTime(entity.getCreationTime());
         model.setCreator(entity.getCreator());
+        model.setMakespan(entity.getMakespan());
         model.setSize(entity.getProjectEntity().getSize());
         model.setPar(entity.getProjectEntity().getPar());
         model.setInst(entity.getProjectEntity().getInst());

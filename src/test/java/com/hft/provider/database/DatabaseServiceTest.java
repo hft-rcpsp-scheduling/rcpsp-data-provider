@@ -13,6 +13,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import utility.DataGenerator;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -72,9 +73,10 @@ class DatabaseServiceTest {
 
     @Test
     @Order(2)
-    void selectSolutions() {
-        SolutionEntity entity = projectDB.selectSolutions(solution40_10_10.getSize(), solution40_10_10.getPar(), solution40_10_10.getInst()).get(0);
-        StoredSolution storedSolution = EntityMapper.mapToModel(entity);
+    void selectSolutions() throws SQLException, IOException {
+        StoredSolution storedSolution =
+                projectDB.selectSolutions(null, solution40_10_10.getSize(), solution40_10_10.getPar(), solution40_10_10.getInst())
+                        .get(0);
 
         assertNotNull(storedSolution.getCreationDate());
         assertNotNull(storedSolution.getCreationTime());

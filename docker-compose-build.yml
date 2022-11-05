@@ -4,7 +4,7 @@ services:
   mysql-service:
     image: mysql:8.0
     container_name: rcpsp-mysql
-    restart: on-failure
+    restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=password
     volumes:

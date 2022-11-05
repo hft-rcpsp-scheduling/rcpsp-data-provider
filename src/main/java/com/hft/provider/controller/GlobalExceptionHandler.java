@@ -12,6 +12,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InvalidObjectException;
+import java.sql.SQLException;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
@@ -38,6 +39,13 @@ public class GlobalExceptionHandler {
         logHandledException(request, exception);
         return buildErrorResponse(HttpStatus.BAD_REQUEST, request, exception);
     }
+
+    @ExceptionHandler(SQLException.class)
+    public ResponseEntity<Error> handleSQLException(HttpServletRequest request, Exception exception) {
+        logHandledException(request, exception);
+        return buildErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, request, exception);
+    }
+
 
     @ExceptionHandler(IOException.class)
     public ResponseEntity<Error> handleIOException(HttpServletRequest request, Exception exception) {

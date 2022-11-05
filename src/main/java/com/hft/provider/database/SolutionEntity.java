@@ -22,12 +22,14 @@ class SolutionEntity {
     @ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "project_id", nullable = false)
     private ProjectEntity projectEntity;
-    @Column(name = "creation_date", columnDefinition = "DATE")
-    private LocalDate creationDate;
-    @Column(name = "creation_time", columnDefinition = "TIME")
-    private OffsetTime creationTime;
+    @Column(name = "creation_date")
+    private String creationDate;
+    @Column(name = "creation_time")
+    private String creationTime;
     @Column(name = "creator")
     private String creator;
+    @Column(name = "makespan")
+    private int makespan;
     @OneToMany(mappedBy = "solutionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SolutionDetailEntity> detailEntities;
 
@@ -39,13 +41,17 @@ class SolutionEntity {
     public SolutionEntity(ProjectEntity projectEntity) {
         this.id = null; // generated
         this.projectEntity = projectEntity;
-        this.creationDate = LocalDate.now();
-        this.creationTime = OffsetTime.now();
+        this.creationDate = LocalDate.now().toString();
+        this.creationTime = OffsetTime.now().toString();
         this.detailEntities = new LinkedHashSet<>();
     }
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    public void setMakespan(int makespan) {
+        this.makespan = makespan;
     }
 
     public void addDetail(SolutionDetailEntity detail) {
