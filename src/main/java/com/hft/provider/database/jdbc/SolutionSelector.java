@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -42,34 +42,46 @@ public class SolutionSelector extends JdbcExecutor {
             selectString += " WHERE ";
         }
         if (creator != null) {
-            selectString += "creator = '" + creator + "'";
+            selectString += "creator = ?";
         }
         if (size != null) {
             if (!selectString.endsWith(" WHERE ")) {
                 selectString += " AND ";
             }
-            selectString += "size = '" + size + "'";
+            selectString += "size = ?";
         }
         if (par != null) {
             if (!selectString.endsWith(" WHERE ")) {
                 selectString += " AND ";
             }
-            selectString += "par = '" + par + "'";
+            selectString += "par = ?";
         }
         if (inst != null) {
             if (!selectString.endsWith(" WHERE ")) {
                 selectString += " AND ";
             }
-            selectString += "inst = '" + inst + "'";
+            selectString += "inst = ?";
         }
 
-        if (showSQL) System.out.println("Jdbc: " + selectString);
+        if (showSQL)
+            System.out.println("Jdbc: " + selectString + " (creator=" + creator + ", size=" + size + ", par=" + par + ", inst=" + inst + ")");
 
         try (Connection connection = createConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(selectString)) {
+             PreparedStatement statement = connection.prepareStatement(selectString)) {
 
-            return retrieveSolution(resultSet);
+            int param = 1;
+            if (creator != null)
+                statement.setString(param++, creator);
+            if (size != null)
+                statement.setInt(param++, size);
+            if (par != null)
+                statement.setInt(param++, par);
+            if (inst != null)
+                statement.setInt(param, inst);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return retrieveSolution(resultSet);
+            }
         }
     }
 
