@@ -11,7 +11,7 @@ services:
       - mysql:/var/lib/mysql
 
   provider-service:
-    build: .
+    build: ../
     image: rcpsp-data-provider:local
     container_name: rcpsp-provider-app
     restart: always

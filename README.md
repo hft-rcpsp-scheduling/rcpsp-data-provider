@@ -13,6 +13,9 @@ for scheduling-algorithm implementations and defines the input- and output-forma
 * Local Documentation: [http://localhost:8080/swagger-ui/](http://localhost:8080/swagger-ui/)
 * Deployed Documentation: [http://rcpsp-provider.com/swagger-ui/](http://193.196.52.129/swagger-ui/)
 
+Have a look into the last [Releases](https://github.com/hft-rcpsp-scheduling/rcpsp-data-provider/releases) to get more
+information.
+
 ### Scheduling Usage
 
 This shows the main use-case of the api:
@@ -78,9 +81,9 @@ visualize solutions |                          |                       |
 
 * [docker-compose.yml](docker-compose.yml)
 * Used to run a stable version of the application.
-* [docker-compose-prod.yml](docker-compose-prod.yml) maps the api-port to `80`
+* [docker-compose-prod.yml](.docker/docker-compose-prod.yml) maps the api-port to `80`
 
-__Pull & Run command:__
+__Pull & Run the stack:__
 
 ```shell
 docker compose pull
@@ -95,16 +98,16 @@ docker compose rm --stop --force
 
 ### Local Image
 
-* [docker-compose-build.yml](docker-compose-build.yml)
+* [docker-compose-build.yml](.docker/docker-compose-build.yml)
 * Used for development or run old versions of the application.
 
-__Build & Run stack:__
+__Build & Run the stack:__
 
 ```shell
-docker compose --file docker-compose-build.yml up --build -d
+docker compose --file .docker/docker-compose-build.yml up --build -d
 ```
 
-__Build & Run container:__
+__Build & Run the container (requires separate database):__
 
 ```shell
 docker build -t data-provider .
@@ -121,3 +124,4 @@ docker compose rm --stop --force
 
 * [Development Documentation](.doc/development.md)
 * [Deployment Documentation](.doc/deployment.md)
+* [Postman Load Testing](.doc/postman.md)

@@ -14,6 +14,11 @@ import java.util.stream.Collectors;
 
 public class DataGenerator {
 
+    public static void main(String[] args) throws IOException {
+        System.out.println(JsonFactory.convertToJson(generateSimpleSolution(120, 1, 1)));
+    }
+
+
     /**
      * @param option 0 = null, 1 = valid, 2 = resources, 3 = relationships, 4 = resources & relationships
      * @return project for testing
