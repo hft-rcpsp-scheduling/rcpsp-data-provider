@@ -104,7 +104,7 @@ docker compose rm --stop --force
 __Build & Run the stack:__
 
 ```shell
-docker compose --file .docker/docker-compose-build.yml up --build -d
+docker compose --file .docker/docker-compose-build.yml up --build
 ```
 
 __Build & Run the container (requires separate database):__
