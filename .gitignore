@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Postman K6 Converter ###
+.postman/node_modules
+.postman/package-lock.json
+.postman/libs
+.postman/*k6-script.js

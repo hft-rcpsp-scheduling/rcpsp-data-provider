@@ -129,16 +129,17 @@ public class DatabaseService {
         ProjectEntity projectEntity = selectProject(solution.getSize(), solution.getPar(), solution.getInst());
         SolutionEntity solutionEntity = new SolutionEntity(projectEntity);
         solutionEntity.setCreator(creator);
+        solutionEntity.setMakespan(solution.getJobs()
+                .stream().filter(job -> job.getNr() == solution.getJobs().size())
+                .findFirst().orElseThrow()
+                .getStartDay());
+        solutionEntity = solutionRepo.save(solutionEntity); // to get ID
         for (Job job : solution.getJobs()) {
             JobEntity jobEntity = jobRepo.findById(projectEntity.getId() + "_" + job.getNr()).orElseThrow();
             solutionEntity.addDetail(
                     new SolutionDetailEntity(solutionEntity, jobEntity)
                             .setStartDay(job.getStartDay()));
         }
-        solutionEntity.setMakespan(solution.getJobs()
-                .stream().filter(job -> job.getNr() == solution.getJobs().size())
-                .findFirst().orElseThrow()
-                .getStartDay());
         return solutionRepo.save(solutionEntity);
     }
 

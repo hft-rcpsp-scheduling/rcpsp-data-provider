@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -36,6 +37,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Error> handleMessageNotReadable(HttpServletRequest request, Exception exception) {
+        logHandledException(request, exception);
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, request, exception);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<Error> handleRequestMethodNotSupported(HttpServletRequest request, Exception exception) {
         logHandledException(request, exception);
         return buildErrorResponse(HttpStatus.BAD_REQUEST, request, exception);
     }

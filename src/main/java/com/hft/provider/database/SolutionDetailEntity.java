@@ -33,7 +33,7 @@ class SolutionDetailEntity {
      * @param jobEntity      linked job
      */
     public SolutionDetailEntity(SolutionEntity solutionEntity, JobEntity jobEntity) {
-        this.id = solutionEntity.getProjectEntity().getId() + "_" + jobEntity.getNr();
+        this.id = solutionEntity.getId() + "_" + jobEntity.getNr();
         this.jobEntity = jobEntity;
         this.solutionEntity = solutionEntity;
         this.jobNr = jobEntity.getNr();

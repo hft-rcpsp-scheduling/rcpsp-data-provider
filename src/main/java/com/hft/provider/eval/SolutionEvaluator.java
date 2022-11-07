@@ -34,6 +34,7 @@ public class SolutionEvaluator {
             notFeasibleReason += "The resource boundaries are an issue.";
         }
         Integer solutionTimeSpan = checkSolutionTimespan(solution);
+        feedback.setSolutionTimeSpan(solutionTimeSpan);
         if (solutionTimeSpan == null) {
             feedback.setFeasible(false);
             if (!notFeasibleReason.isEmpty())

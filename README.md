@@ -4,14 +4,21 @@
 
 # RCPSP Data Provider
 
-This application provides an API to __serve raw data__ and __validate solutions__. It should build the infrastructure
-for scheduling-algorithm implementations and defines the input- and output-format.
+This application provides an API to __serve raw data (projects)__ and __validate solutions__. It should build the
+infrastructure for scheduling-algorithm implementations and defines the input- and output-format. In addition, the
+application can store solutions for later use.
+
+Please read the [Container Section](#Container) to run the application and
+the [Development Documentation](.doc/development.md) to enhance the application.
 
 ## REST API
 
 * [Controller & Models](src/main/java/com/hft/provider/controller)
 * Local Documentation: [http://localhost:8080/swagger-ui/](http://localhost:8080/swagger-ui/)
 * Deployed Documentation: [http://rcpsp-provider.com/swagger-ui/](http://193.196.52.129/swagger-ui/)
+
+Have a look into the last [Releases](https://github.com/hft-rcpsp-scheduling/rcpsp-data-provider/releases) to get more
+information.
 
 ### Scheduling Usage
 
@@ -78,9 +85,9 @@ visualize solutions |                          |                       |
 
 * [docker-compose.yml](docker-compose.yml)
 * Used to run a stable version of the application.
-* [docker-compose-prod.yml](docker-compose-prod.yml) maps the api-port to `80`
+* [docker-compose-prod.yml](.docker/docker-compose-prod.yml) maps the api-port to `80`
 
-__Pull & Run command:__
+__Pull & Run the stack:__
 
 ```shell
 docker compose pull
@@ -95,16 +102,16 @@ docker compose rm --stop --force
 
 ### Local Image
 
-* [docker-compose-build.yml](docker-compose-build.yml)
+* [docker-compose-build.yml](.docker/docker-compose-build.yml)
 * Used for development or run old versions of the application.
 
-__Build & Run stack:__
+__Build & Run the stack:__
 
 ```shell
-docker compose --file docker-compose-build.yml up --build -d
+docker compose --file .docker/docker-compose-build.yml up --build
 ```
 
-__Build & Run container:__
+__Build & Run the container (requires separate database):__
 
 ```shell
 docker build -t data-provider .
@@ -121,3 +128,4 @@ docker compose rm --stop --force
 
 * [Development Documentation](.doc/development.md)
 * [Deployment Documentation](.doc/deployment.md)
+* [Postman Load Testing](.doc/postman.md)
