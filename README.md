@@ -4,8 +4,12 @@
 
 # RCPSP Data Provider
 
-This application provides an API to __serve raw data__ and __validate solutions__. It should build the infrastructure
-for scheduling-algorithm implementations and defines the input- and output-format.
+This application provides an API to __serve raw data (projects)__ and __validate solutions__. It should build the
+infrastructure for scheduling-algorithm implementations and defines the input- and output-format. In addition, the
+application can store solutions for later use.
+
+Please read the [Container Section](#Container) to run the application and
+the [Development Documentation](.doc/development.md) to enhance the application.
 
 ## REST API
 

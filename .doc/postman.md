@@ -16,7 +16,7 @@ hand ([Postman Issue](https://github.com/postmanlabs/postman-app-support/issues/
 ## Sequential Load Testing (Postman Runner)
 
 1. Open Postman Runner (button in the top left corner)
-2. Adjust run settings like `iterations` & `delay`
+2. Adjust run settings like `iterations` & `delay` and select requests from the collection
 3. Start the Runner
 
 ## Advanced Load Testing (Grafana K6)
@@ -43,10 +43,17 @@ npx @apideck/postman-to-k6 db.postman_collection.json -o db-k6-script.js
 
 Run 30 second load test with 2 virtual users. Uses the scenarios from the [k6-script.js](../.postman).
 
+Stateless scenario to not work on the database (simple workflow).
+
 ```shell
 cd ../.postman
 k6 run --duration 30s --vus 2 stateless-k6-script.js
-# or
+```
+
+Database scenario to use the database (advanced workflow).
+
+```shell
+cd ../.postman
 k6 run --duration 30s --vus 2 db-k6-script.js
 ```
 
