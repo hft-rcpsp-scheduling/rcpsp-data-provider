@@ -1,7 +1,6 @@
 package com.hft.provider.database;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hft.provider.database.utility.JsonParser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -88,30 +87,19 @@ class JobEntity implements Serializable {
         this.predecessorCount = predecessorCount;
     }
 
-    public List<Integer> getSuccessors() throws JsonProcessingException {
-        return convertToList(successors);
+    public List<Integer> getSuccessors() {
+        return JsonParser.convertToList(successors);
     }
 
-    public void setSuccessors(List<Integer> successors) throws JsonProcessingException {
-        this.successors = convertToJson(successors);
+    public void setSuccessors(List<Integer> successors) {
+        this.successors = JsonParser.convertToJsonString(successors);
     }
 
-    public List<Integer> getPredecessors() throws JsonProcessingException {
-        return convertToList(predecessors);
+    public List<Integer> getPredecessors() {
+        return JsonParser.convertToList(predecessors);
     }
 
-    public void setPredecessors(List<Integer> predecessors) throws JsonProcessingException {
-        this.predecessors = convertToJson(predecessors);
-    }
-
-    // === PRIVATE =====================================================================================================
-
-    private String convertToJson(List<Integer> obj) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(obj);
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<Integer> convertToList(String jsonString) throws JsonProcessingException {
-        return new ObjectMapper().readValue(jsonString, List.class);
+    public void setPredecessors(List<Integer> predecessors) {
+        this.predecessors = JsonParser.convertToJsonString(predecessors);
     }
 }

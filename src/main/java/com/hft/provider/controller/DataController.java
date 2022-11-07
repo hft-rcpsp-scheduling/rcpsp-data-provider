@@ -60,13 +60,6 @@ public class DataController {
                         dbService.selectProject(size, par, inst)));
     }
 
-    @ApiOperation("Get all sets of projects from the database.")
-    @GetMapping(path = "/data", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Project>> getAllProjectsFromDatabase() throws SQLException, IOException {
-        return ResponseEntity.ok(
-                dbService.selectAllProjects());
-    }
-
     @Deprecated
     @ApiOperation("Get a set of data from a file.")
     @GetMapping(path = "/file/{size}/{par}/{inst}", produces = MediaType.APPLICATION_JSON_VALUE)

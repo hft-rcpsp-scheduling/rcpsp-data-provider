@@ -1,9 +1,8 @@
 package com.hft.provider.database.jdbc;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hft.provider.controller.model.Job;
 import com.hft.provider.controller.model.StoredSolution;
+import com.hft.provider.database.utility.JsonParser;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +19,6 @@ import java.util.List;
  * </ol>
  */
 class SolutionMapper {
-
     private final StoredSolution solution;
     private final List<Job> jobs;
     private boolean solutionIsUndefined;
@@ -38,10 +36,9 @@ class SolutionMapper {
      * </ol>
      *
      * @param resultSet row of data
-     * @throws SQLException            if a column label does not match the result set
-     * @throws JsonProcessingException if an exception occurs by parsing the json arrays
+     * @throws SQLException if a column label does not match the result set
      */
-    public void appendResult(ResultSet resultSet) throws SQLException, JsonProcessingException {
+    public void appendResult(ResultSet resultSet) throws SQLException {
         if (solutionIsUndefined) {
             solution.setId(resultSet.getLong("id"));
             solution.setCreationDate(resultSet.getString("date"));
@@ -62,9 +59,9 @@ class SolutionMapper {
         Job job = new Job();
         job.setNr(resultSet.getInt("jNr"));
         job.setSuccessorCount(resultSet.getInt("jSucCount"));
-        job.setSuccessors(convertToList(resultSet.getString("jSuc")));
+        job.setSuccessors(JsonParser.convertToList(resultSet.getString("jSuc")));
         job.setPredecessorCount(resultSet.getInt("jPreCount"));
-        job.setPredecessors(convertToList(resultSet.getString("jPre")));
+        job.setPredecessors(JsonParser.convertToList(resultSet.getString("jPre")));
         job.setMode(resultSet.getInt("jMode"));
         job.setDurationDays(resultSet.getInt("jDuration"));
         job.setR1HoursPerDay(resultSet.getInt("jR1"));
@@ -87,10 +84,5 @@ class SolutionMapper {
         }
         solution.setJobs(jobs);
         return solution;
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<Integer> convertToList(String jsonString) throws JsonProcessingException {
-        return new ObjectMapper().readValue(jsonString, List.class);
     }
 }

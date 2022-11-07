@@ -24,12 +24,8 @@ public class EntityMapper {
             JobEntity jobEntity = new JobEntity(projectEntity, job.getNr());
             jobEntity.setSuccessorCount(job.getSuccessorCount());
             jobEntity.setPredecessorCount(job.getPredecessorCount());
-            try {
-                jobEntity.setSuccessors(job.getSuccessors());
-                jobEntity.setPredecessors(job.getPredecessors());
-            } catch (JsonProcessingException e) {
-                LOGGER.severe(e.getClass().getSimpleName() + ": " + e.getMessage());
-            }
+            jobEntity.setSuccessors(job.getSuccessors());
+            jobEntity.setPredecessors(job.getPredecessors());
             jobEntity.setMode(job.getMode());
             jobEntity.setDuration(job.getDurationDays());
             jobEntity.setR1(job.getR1HoursPerDay());

@@ -3,7 +3,6 @@ package com.hft.provider.database;
 import com.hft.provider.controller.model.Job;
 import com.hft.provider.controller.model.Project;
 import com.hft.provider.controller.model.StoredSolution;
-import com.hft.provider.database.jdbc.ProjectSelector;
 import com.hft.provider.database.jdbc.SolutionSelector;
 import com.hft.provider.file.ProjectReader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +23,15 @@ public class DatabaseService {
     private final ProjectRepo projectRepo;
     private final JobRepo jobRepo;
     private final SolutionRepo solutionRepo;
-    private final ProjectSelector projectSelector;
     private final SolutionSelector solutionSelector;
 
     @Autowired
     public DatabaseService(ProjectRepo projectRepo,
                            SolutionRepo solutionRepo,
                            JobRepo jobRepo,
-                           ProjectSelector projectSelector,
                            SolutionSelector solutionSelector,
                            @Value("${spring.datasource.url}") String datasource,
                            @Value("${spring.sql.init.mode}") String initMode) {
-        this.projectSelector = projectSelector;
         this.solutionSelector = solutionSelector;
         LOGGER.info("Datasource=(" + datasource + ") with Init-Mode=(" + initMode + ")");
         this.initMode = initMode;
@@ -93,15 +89,6 @@ public class DatabaseService {
         } else {
             throw new NoSuchElementException("No project found with id=" + id);
         }
-    }
-
-    /**
-     * @return all projects
-     * @throws SQLException if a database access error occurs or this method is called on a closed result set
-     * @throws IOException  if file not found
-     */
-    public List<Project> selectAllProjects() throws SQLException, IOException {
-        return projectSelector.selectProjects();
     }
 
     /**
