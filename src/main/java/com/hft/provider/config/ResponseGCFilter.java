@@ -18,7 +18,7 @@ public class ResponseGCFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         filterChain.doFilter(servletRequest, servletResponse);
-        LOGGER.info("Running explicit Garbage Collector after " + req.getMethod() + " : " + req.getRequestURI());
+        LOGGER.fine("Running explicit Garbage Collector after " + req.getMethod() + " : " + req.getRequestURI());
         System.gc();
     }
 }

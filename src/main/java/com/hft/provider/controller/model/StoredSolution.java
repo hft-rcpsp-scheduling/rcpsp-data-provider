@@ -1,5 +1,6 @@
 package com.hft.provider.controller.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -45,4 +46,9 @@ public class StoredSolution {
     private int jobCount = 0;
     @ApiModelProperty(value = "Defined details for the solution")
     private List<Job> jobs = new ArrayList<>();
+
+    @JsonIgnore
+    public void addJob(Job job) {
+        this.jobs.add(job);
+    }
 }

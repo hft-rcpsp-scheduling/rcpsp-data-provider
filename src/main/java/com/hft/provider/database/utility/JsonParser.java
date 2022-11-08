@@ -13,10 +13,15 @@ public class JsonParser {
      * @return list with integers
      */
     public static List<Integer> convertToList(String jsonString) {
-        if (jsonString.equals("[]")) return new ArrayList<>();
-        jsonString = jsonString.replace("[", "");
-        jsonString = jsonString.replace("]", "");
-        return Arrays.stream((jsonString.split(","))).map(Integer::valueOf).collect(Collectors.toList());
+        if (jsonString.equals("[]"))
+            return new ArrayList<>();
+        return Arrays.stream(jsonString
+                        .replaceAll(" ", "")
+                        .replace("[", "")
+                        .replace("]", "")
+                        .split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
     }
 
     /**
