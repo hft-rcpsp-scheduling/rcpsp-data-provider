@@ -21,14 +21,12 @@ public class DatabaseService {
     private final Logger LOGGER = Logger.getLogger(DatabaseService.class.getName());
     private final String initMode;
     private final ProjectRepo projectRepo;
-    private final JobRepo jobRepo;
     private final SolutionRepo solutionRepo;
     private final SolutionSelector solutionSelector;
 
     @Autowired
     public DatabaseService(ProjectRepo projectRepo,
                            SolutionRepo solutionRepo,
-                           JobRepo jobRepo,
                            SolutionSelector solutionSelector,
                            @Value("${spring.datasource.url}") String datasource,
                            @Value("${spring.sql.init.mode}") String initMode) {
@@ -36,7 +34,6 @@ public class DatabaseService {
         LOGGER.info("Datasource=(" + datasource + ") with Init-Mode=(" + initMode + ")");
         this.initMode = initMode;
         this.projectRepo = projectRepo;
-        this.jobRepo = jobRepo;
         this.solutionRepo = solutionRepo;
     }
 
@@ -122,12 +119,15 @@ public class DatabaseService {
                 .getStartDay());
         solutionEntity = solutionRepo.save(solutionEntity); // to get ID
         for (Job job : solution.getJobs()) {
-            JobEntity jobEntity = jobRepo.findById(projectEntity.getId() + "_" + job.getNr()).orElseThrow();
+            JobEntity jobEntity = projectEntity.getJobEntities().stream()
+                    .filter(projectJob -> projectJob.getNr() == job.getNr())
+                    .findFirst().orElseThrow();
             solutionEntity.addDetail(
                     new SolutionDetailEntity(solutionEntity, jobEntity)
                             .setStartDay(job.getStartDay()));
         }
-        return solutionRepo.save(solutionEntity);
+        solutionRepo.saveDetailsFast(solutionEntity.getDetailEntities());
+        return solutionEntity;
     }
 
     // === PACKAGE PRIVATE =============================================================================================
