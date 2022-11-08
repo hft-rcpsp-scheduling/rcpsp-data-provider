@@ -1,7 +1,8 @@
 package com.hft.provider.database.jdbc;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.hft.provider.controller.model.Job;
 import com.hft.provider.controller.model.StoredSolution;
+import com.hft.provider.database.utility.JsonParser;
 import com.hft.provider.file.StatementReader;
 import org.springframework.stereotype.Component;
 
@@ -85,30 +86,56 @@ public class SolutionSelector extends JdbcExecutor {
         }
     }
 
-    private List<StoredSolution> retrieveSolution(ResultSet resultSet) throws SQLException, JsonProcessingException {
+    private List<StoredSolution> retrieveSolution(ResultSet resultSet) throws SQLException {
         List<StoredSolution> solutions = new ArrayList<>();
         LOGGER.info("Start mapping solutions of query.");
         long solutionId = -1;
-        SolutionMapper mapper = new SolutionMapper();
         while (resultSet.next()) {
             long resultId = resultSet.getLong("id");
-            // sets first id
-            if (solutionId == -1) {
-                solutionId = resultId;
-            }
             // if solution id changes, it resets the mapper
             if (solutionId != resultId) {
                 solutionId = resultId;
-                solutions.add(mapper.retrieveSolution());
-                mapper = new SolutionMapper();
+                solutions.add(readSolution(resultSet));
             }
-            mapper.appendResult(resultSet);
-        }
-        try {
-            solutions.add(mapper.retrieveSolution());
-        } catch (IllegalStateException ignored) {
+            solutions.get(solutions.size() - 1).addJob(readJob(resultSet));
         }
         LOGGER.info("Retrieved " + solutions.size() + " solutions.");
         return solutions;
+    }
+
+    private StoredSolution readSolution(ResultSet resultSet) throws SQLException {
+        StoredSolution storedSolution = new StoredSolution();
+        storedSolution.setId(resultSet.getLong("id"));
+        storedSolution.setCreationDate(resultSet.getString("date"));
+        storedSolution.setCreationTime(resultSet.getString("time"));
+        storedSolution.setCreator(resultSet.getString("creator"));
+        storedSolution.setMakespan(resultSet.getInt("makespan"));
+        storedSolution.setSize(resultSet.getInt("size"));
+        storedSolution.setPar(resultSet.getInt("par"));
+        storedSolution.setInst(resultSet.getInt("inst"));
+        storedSolution.setR1CapacityPerDay(resultSet.getInt("r1"));
+        storedSolution.setR2CapacityPerDay(resultSet.getInt("r2"));
+        storedSolution.setR3CapacityPerDay(resultSet.getInt("r3"));
+        storedSolution.setR4CapacityPerDay(resultSet.getInt("r4"));
+        storedSolution.setHorizon(resultSet.getInt("horizon"));
+        storedSolution.setJobCount(resultSet.getInt("jobCount"));
+        return storedSolution;
+    }
+
+    private Job readJob(ResultSet resultSet) throws SQLException {
+        Job job = new Job();
+        job.setNr(resultSet.getInt("jNr"));
+        job.setSuccessorCount(resultSet.getInt("jSucCount"));
+        job.setSuccessors(JsonParser.convertToList(resultSet.getString("jSuc")));
+        job.setPredecessorCount(resultSet.getInt("jPreCount"));
+        job.setPredecessors(JsonParser.convertToList(resultSet.getString("jPre")));
+        job.setMode(resultSet.getInt("jMode"));
+        job.setDurationDays(resultSet.getInt("jDuration"));
+        job.setR1HoursPerDay(resultSet.getInt("jR1"));
+        job.setR2HoursPerDay(resultSet.getInt("jR2"));
+        job.setR3HoursPerDay(resultSet.getInt("jR3"));
+        job.setR4HoursPerDay(resultSet.getInt("jR4"));
+        job.setStartDay(resultSet.getInt("jStart"));
+        return job;
     }
 }

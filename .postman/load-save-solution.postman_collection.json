@@ -1,13 +1,13 @@
 {
   "info": {
-    "_postman_id": "d248df80-4535-4519-8c0d-e3901d887c61",
-    "name": "rcpsp-provider-stateless",
+    "_postman_id": "ba316a76-4e17-4744-9e2d-1a1cce8af727",
+    "name": "rcpsp-provider-save-solution",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "7353235"
   },
   "item": [
     {
-      "name": "Get Data Set (120/1/1)",
+      "name": "Save Solution (120/1/1)",
       "event": [
         {
           "listen": "test",
@@ -21,43 +21,6 @@
           }
         }
       ],
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{base-url}}/api/data/120/1/1",
-          "host": [
-            "{{base-url}}"
-          ],
-          "path": [
-            "api",
-            "data",
-            "120",
-            "1",
-            "1"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Evaluate Solution (120/1/1)",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"Status test\", function () {\r",
-              "    pm.response.to.have.status(200);\r",
-              "});"
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "protocolProfileBehavior": {
-        "disabledSystemHeaders": {}
-      },
       "request": {
         "method": "POST",
         "header": [
@@ -77,43 +40,26 @@
           }
         },
         "url": {
-          "raw": "{{base-url}}/api/eval",
+          "raw": "http://localhost:8080/api/data/solution?creator=load-test",
+          "protocol": "http",
           "host": [
-            "{{base-url}}"
+            "localhost"
           ],
+          "port": "8080",
           "path": [
             "api",
-            "eval"
+            "data",
+            "solution"
+          ],
+          "query": [
+            {
+              "key": "creator",
+              "value": "load-test"
+            }
           ]
         }
       },
       "response": []
-    }
-  ],
-  "event": [
-    {
-      "listen": "prerequest",
-      "script": {
-        "type": "text/javascript",
-        "exec": [
-          ""
-        ]
-      }
-    },
-    {
-      "listen": "test",
-      "script": {
-        "type": "text/javascript",
-        "exec": [
-          ""
-        ]
-      }
-    }
-  ],
-  "variable": [
-    {
-      "key": "base-url",
-      "value": "http://localhost:8080"
     }
   ]
 }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-interface SolutionRepo extends JpaRepository<SolutionEntity, Long> {
+interface SolutionRepo extends JpaRepository<SolutionEntity, Long>, SolutionRepoEM {
     @Query("select distinct s.creator from Solution s")
     List<String> getCreatorOptions();
 }
