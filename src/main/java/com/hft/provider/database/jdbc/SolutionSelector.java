@@ -100,6 +100,7 @@ public class SolutionSelector extends JdbcExecutor {
             if (solutionId != resultId) {
                 solutionId = resultId;
                 solutions.add(mapper.retrieveSolution());
+                mapper.clear();
                 mapper = new SolutionMapper();
             }
             mapper.appendResult(resultSet);
@@ -108,6 +109,8 @@ public class SolutionSelector extends JdbcExecutor {
             solutions.add(mapper.retrieveSolution());
         } catch (IllegalStateException ignored) {
         }
+        mapper.clear();
+        System.gc(); // otherwise there was memory leak
         LOGGER.info("Retrieved " + solutions.size() + " solutions.");
         return solutions;
     }

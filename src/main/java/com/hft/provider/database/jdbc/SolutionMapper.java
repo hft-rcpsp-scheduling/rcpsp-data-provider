@@ -19,8 +19,8 @@ import java.util.List;
  * </ol>
  */
 class SolutionMapper {
-    private final StoredSolution solution;
-    private final List<Job> jobs;
+    private StoredSolution solution;
+    private List<Job> jobs;
     private boolean solutionIsUndefined;
 
     public SolutionMapper() {
@@ -84,5 +84,11 @@ class SolutionMapper {
         }
         solution.setJobs(jobs);
         return solution;
+    }
+
+    public void clear() {
+        jobs.clear();
+        jobs = null;
+        solution = null;
     }
 }
