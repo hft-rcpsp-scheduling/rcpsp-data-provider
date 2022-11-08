@@ -1,9 +1,9 @@
 {
   "info": {
-    "_postman_id": "1152c506-fd53-4d1e-8719-d1b9844a1b2b",
-    "name": "rcpsp-get-dataset",
+    "_postman_id": "ea4d0ac7-6802-466f-92d6-dbececac980d",
+    "name": "rcpsp-provider-get-data",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "13304200"
+    "_exporter_id": "7353235"
   },
   "item": [
     {
@@ -25,10 +25,12 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base-url}}/api/data/120/1/1",
+          "raw": "http://localhost:8080/api/data/120/1/1",
+          "protocol": "http",
           "host": [
-            "{{base-url}}"
+            "localhost"
           ],
+          "port": "8080",
           "path": [
             "api",
             "data",
@@ -39,12 +41,6 @@
         }
       },
       "response": []
-    }
-  ],
-  "variable": [
-    {
-      "key": "base-url",
-      "value": "http://localhost:8080"
     }
   ]
 }

@@ -1,13 +1,13 @@
 {
   "info": {
-    "_postman_id": "0fb3567b-6c86-4254-8b7c-b62f4d265782",
-    "name": "rcpsp-evaluate-solution",
+    "_postman_id": "ba316a76-4e17-4744-9e2d-1a1cce8af727",
+    "name": "rcpsp-provider-save-solution",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "13304200"
+    "_exporter_id": "7353235"
   },
   "item": [
     {
-      "name": "Evaluate Solution (120/1/1)",
+      "name": "Save Solution (120/1/1)",
       "event": [
         {
           "listen": "test",
@@ -40,23 +40,26 @@
           }
         },
         "url": {
-          "raw": "{{base-url}}/api/eval",
+          "raw": "http://localhost:8080/api/data/solution?creator=load-test",
+          "protocol": "http",
           "host": [
-            "{{base-url}}"
+            "localhost"
           ],
+          "port": "8080",
           "path": [
             "api",
-            "eval"
+            "data",
+            "solution"
+          ],
+          "query": [
+            {
+              "key": "creator",
+              "value": "load-test"
+            }
           ]
         }
       },
       "response": []
-    }
-  ],
-  "variable": [
-    {
-      "key": "base-url",
-      "value": "http://localhost:8080"
     }
   ]
 }
