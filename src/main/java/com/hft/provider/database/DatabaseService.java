@@ -141,9 +141,7 @@ public class DatabaseService {
      */
     @Transactional
     public void insertProjects(List<ProjectEntity> entities) {
-        LOGGER.info("Starting to save " + entities.size() + " projects to the database.");
         projectRepo.saveAllFast(entities);
-        LOGGER.info("Successfully saved " + entities.size() + " projects to the database.");
     }
 
     // === PRIVATE =====================================================================================================

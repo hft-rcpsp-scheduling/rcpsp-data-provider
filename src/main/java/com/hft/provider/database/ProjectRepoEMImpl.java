@@ -21,14 +21,14 @@ public class ProjectRepoEMImpl implements ProjectRepoEM {
     @Override
     @Transactional
     public void saveAllFast(List<ProjectEntity> entities) {
-        LOGGER.fine("Start persisting " + entities.size() + " entities.");
+        LOGGER.info("Start persisting " + entities.size() + " project entities.");
         for (int i = 0; i < entities.size(); i++) {
             entityManager.persist(entities.get(i));
             if (i % 50 == 0) {
                 try {
                     entityManager.flush(); //flush a batch of inserts and release memory
                     entityManager.clear();
-                    LOGGER.fine("Progress of persisting entities: " + (i * 100 / entities.size()) + "%");
+                    LOGGER.info("Progress of persisting project entities: " + (i * 100 / entities.size()) + "%");
                 } catch (Exception e) {
                     LOGGER.severe(e.getClass().getSimpleName() + ": " + e.getMessage());
                 }
@@ -36,6 +36,6 @@ public class ProjectRepoEMImpl implements ProjectRepoEM {
         }
         entityManager.flush(); //flush a batch of inserts and release memory
         entityManager.clear();
-        LOGGER.fine("Successfully persisted " + entities.size() + " entities.");
+        LOGGER.info("Successfully persisted " + entities.size() + "project entities.");
     }
 }
