@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 public class SolutionSelector extends JdbcExecutor {
     private final Logger LOGGER = Logger.getLogger(SolutionSelector.class.getName());
 
-
     /**
      * <ol>
      *     <li>Reads statement from file resource.</li>
@@ -38,7 +37,7 @@ public class SolutionSelector extends JdbcExecutor {
      * @throws SQLException if a database access error occurs or this method is called on a closed result set
      */
     public List<StoredSolution> selectSolutions(String creator, Integer size, Integer par, Integer inst) throws IOException, SQLException {
-        String selectString = new StatementReader().readSelectSolution();
+        String selectString = StatementReader.readSelectSolution();
         if (creator != null || size != null || par != null || inst != null) {
             selectString += " WHERE ";
         }
@@ -88,7 +87,7 @@ public class SolutionSelector extends JdbcExecutor {
 
     private List<StoredSolution> retrieveSolution(ResultSet resultSet) throws SQLException {
         List<StoredSolution> solutions = new ArrayList<>();
-        LOGGER.info("Start mapping solutions of query.");
+        LOGGER.fine("Start mapping solutions of query.");
         long solutionId = -1;
         while (resultSet.next()) {
             long resultId = resultSet.getLong("id");
@@ -99,7 +98,7 @@ public class SolutionSelector extends JdbcExecutor {
             }
             solutions.get(solutions.size() - 1).addJob(readJob(resultSet));
         }
-        LOGGER.info("Retrieved " + solutions.size() + " solutions.");
+        LOGGER.fine("Successfully retrieved " + solutions.size() + " solutions from query.");
         return solutions;
     }
 

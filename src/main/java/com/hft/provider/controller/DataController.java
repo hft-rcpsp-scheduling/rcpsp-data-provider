@@ -83,7 +83,7 @@ public class DataController {
             @ApiParam(value = "Creator ID", example = "AI") @RequestParam(required = false) String creator,
             @RequestBody Project solution)
             throws InvalidObjectException {
-        LOGGER.info("Request saving solution to database.");
+        LOGGER.info("Request saving solution to database (size=" + solution.getSize() + ", par=" + solution.getPar() + ", inst=" + solution.getInst() + ")");
         Feedback feedback = SolutionEvaluator.evaluate(solution, new Feedback());
         if (!feedback.isFeasible()) {
             throw new InvalidObjectException("Solution is not feasible. " + feedback.getNotFeasibleReason());
@@ -103,8 +103,7 @@ public class DataController {
             @ApiParam(value = "File: j1201_{inst} (1 to 10)", example = "1") @PathVariable Integer inst)
             throws IOException {
         LOGGER.info("Request project from file (size=" + size + ", par=" + par + ", inst=" + inst + ")");
-        ProjectReader reader = new ProjectReader();
         return ResponseEntity.ok(
-                reader.parseProject("projects/j" + size + "/j" + size + par + "_" + inst + ".sm"));
+                ProjectReader.parseProject("projects/j" + size + "/j" + size + par + "_" + inst + ".sm"));
     }
 }

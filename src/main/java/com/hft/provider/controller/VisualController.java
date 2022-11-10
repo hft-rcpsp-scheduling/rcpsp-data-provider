@@ -25,7 +25,7 @@ public class VisualController {
     @PostMapping(path = "/solution", produces = "application/ms-excel", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Resource> visualizeSolution(@RequestBody Project solution) throws IOException {
         String fileName = "j" + solution.getSize() + solution.getPar() + "_" + solution.getInst() + "_solution.xlsx";
-        LOGGER.info("Generating visualization of solution (filename=" + fileName + ")");
+        LOGGER.info("Requesting visualization of solution (filename=" + fileName + ")");
         Resource resource = new UrlResource(ProjectVisualizer.convert(solution).toURI());
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)

@@ -89,7 +89,7 @@ public class DataGenerator {
     }
 
     public static Project readProject(int size, int par, int inst) throws IOException {
-        return new ProjectReader().parseProject("projects/j" + size + "/j" + size + par + "_" + inst + ".sm");
+        return ProjectReader.parseProject("projects/j" + size + "/j" + size + par + "_" + inst + ".sm");
     }
 
     public static Project generateSimpleSolution(int size, int par, int inst) throws IOException {

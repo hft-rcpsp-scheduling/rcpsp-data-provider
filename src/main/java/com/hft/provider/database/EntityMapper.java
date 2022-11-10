@@ -1,16 +1,13 @@
 package com.hft.provider.database;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hft.provider.controller.model.Job;
 import com.hft.provider.controller.model.Project;
 import com.hft.provider.controller.model.StoredSolution;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.logging.Logger;
 
 public class EntityMapper {
-    private static final Logger LOGGER = Logger.getLogger(EntityMapper.class.getName());
 
     public static ProjectEntity mapToEntity(Project project) {
         ProjectEntity projectEntity = new ProjectEntity(project.getSize(), project.getPar(), project.getInst());
@@ -53,14 +50,7 @@ public class EntityMapper {
         model.setR4CapacityPerDay(entity.getProjectEntity().getR4Capacity());
         model.setHorizon(entity.getProjectEntity().getHorizon());
         model.setJobCount(entity.getProjectEntity().getJobCount());
-        model.setJobs(new ArrayList<>(entity.getDetailEntities().stream().map(detailEntity -> {
-            try {
-                return mapToModel(detailEntity);
-            } catch (JsonProcessingException e) {
-                LOGGER.severe(e.getClass().getSimpleName() + ": " + e.getMessage());
-                throw new RuntimeException(e);
-            }
-        }).toList()));
+        model.setJobs(new ArrayList<>(entity.getDetailEntities().stream().map(EntityMapper::mapToModel).toList()));
         model.getJobs().sort(Comparator.comparingInt(Job::getNr));
         return model;
     }
@@ -76,21 +66,14 @@ public class EntityMapper {
         model.setR4CapacityPerDay(entity.getR4Capacity());
         model.setHorizon(entity.getHorizon());
         model.setJobCount(entity.getJobCount());
-        model.setJobs(new java.util.ArrayList<>(entity.getJobEntities().stream().map(job -> {
-            try {
-                return mapToModel(job);
-            } catch (JsonProcessingException e) {
-                LOGGER.severe(e.getClass().getSimpleName() + ": " + e.getMessage());
-                throw new RuntimeException(e);
-            }
-        }).toList()));
+        model.setJobs(new ArrayList<>(entity.getJobEntities().stream().map(EntityMapper::mapToModel).toList()));
         model.getJobs().sort(Comparator.comparingInt(Job::getNr));
         return model;
     }
 
     // === PRIVATE =====================================================================================================
 
-    private static Job mapToModel(JobEntity job) throws JsonProcessingException {
+    private static Job mapToModel(JobEntity job) {
         Job model = new Job();
         model.setNr(job.getNr());
         model.setSuccessorCount(job.getSuccessorCount());
@@ -106,7 +89,7 @@ public class EntityMapper {
         return model;
     }
 
-    private static Job mapToModel(SolutionDetailEntity detail) throws JsonProcessingException {
+    private static Job mapToModel(SolutionDetailEntity detail) {
         Job model = new Job();
         model.setNr(detail.getJobNr());
         model.setSuccessorCount(detail.getJobEntity().getSuccessorCount());

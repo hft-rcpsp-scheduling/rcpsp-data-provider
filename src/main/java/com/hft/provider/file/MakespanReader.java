@@ -10,11 +10,15 @@ import java.util.Scanner;
 public class MakespanReader extends FileReader {
     private final static String PROJECT_PATH = "makespans/";
 
+    private MakespanReader() {
+        // blocks object creation
+    }
+
     /**
      * @return list with full paths of files in the makespan directory
      * @throws IOException if input stream is null
      */
-    public List<String> getAllFilePaths() throws IOException {
+    public static List<String> getAllFilePaths() throws IOException {
         return getDirectoryPaths(PROJECT_PATH);
     }
 
@@ -23,7 +27,7 @@ public class MakespanReader extends FileReader {
      * @return list of feedbacks with all available properties from file
      * @throws IOException if input stream is null
      */
-    public List<Feedback> parseMakespans(String resourceFilePath) throws IOException {
+    public static List<Feedback> parseMakespans(String resourceFilePath) throws IOException {
         int size = extractSize(extractFileName(resourceFilePath)); // j{size}hrs
         List<Feedback> makespans = new ArrayList<>();
 
@@ -52,7 +56,7 @@ public class MakespanReader extends FileReader {
      * @param fileName like j1201_10.sm
      * @return j{size}1_10.sm
      */
-    private int extractSize(String fileName) {
+    private static int extractSize(String fileName) {
         String number = fileName.replaceAll("j", "");
         if (number.startsWith("30"))
             return 30;

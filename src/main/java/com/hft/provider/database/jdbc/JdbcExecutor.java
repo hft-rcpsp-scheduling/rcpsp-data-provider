@@ -42,7 +42,7 @@ class JdbcExecutor {
      * @return JDBC connection
      * @throws SQLException if a database access error occurs or the url is null
      */
-    public Connection createConnection() throws SQLException {
+    protected Connection createConnection() throws SQLException {
         return DriverManager.getConnection(dbUrl, username, password);
     }
 }
