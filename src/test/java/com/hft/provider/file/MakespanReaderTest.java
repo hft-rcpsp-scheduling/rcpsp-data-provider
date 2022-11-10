@@ -10,11 +10,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MakespanReaderTest {
-    MakespanReader makespanReader = new MakespanReader();
 
     @Test
     void getAllFilePaths() throws IOException {
-        List<String> paths = makespanReader.getAllFilePaths();
+        List<String> paths = MakespanReader.getAllFilePaths();
         assertNotNull(paths);
         assertFalse(paths.isEmpty(), "Paths not empty.");
         assertTrue(paths.get(0).endsWith(".sm"), "Ends with '.sm'");
@@ -23,7 +22,7 @@ class MakespanReaderTest {
 
     @Test
     void parseFile30() throws IOException {
-        List<Feedback> makespans = makespanReader.parseMakespans("makespans/j30hrs.sm");
+        List<Feedback> makespans = MakespanReader.parseMakespans("makespans/j30hrs.sm");
         assertNotNull(makespans);
         assertFalse(makespans.isEmpty(), "Makespans not empty.");
         Feedback feedback301_1 = makespans.get(0);
@@ -41,10 +40,10 @@ class MakespanReaderTest {
 
     @Test
     void parseAllFiles() throws IOException {
-        List<String> paths = makespanReader.getAllFilePaths();
+        List<String> paths = MakespanReader.getAllFilePaths();
         List<Feedback> makespans = new ArrayList<>();
         for (String path : paths) {
-            makespans.addAll(makespanReader.parseMakespans(path));
+            makespans.addAll(MakespanReader.parseMakespans(path));
         }
         assertEquals(2040, makespans.size());
     }

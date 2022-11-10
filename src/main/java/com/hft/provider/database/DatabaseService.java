@@ -149,12 +149,11 @@ public class DatabaseService {
     // === PRIVATE =====================================================================================================
 
     private List<ProjectEntity> parseAllProjects() throws IOException {
-        ProjectReader reader = new ProjectReader();
-        List<String> filePaths = reader.getAllFilePaths();
+        List<String> filePaths = ProjectReader.getAllFilePaths();
         LOGGER.info("Starting to parse " + filePaths.size() + " projects from resources.");
         List<ProjectEntity> entities = filePaths.stream().map((path) -> {
             try {
-                return EntityMapper.mapToEntity(reader.parseProject(path));
+                return EntityMapper.mapToEntity(ProjectReader.parseProject(path));
             } catch (IOException e) {
                 LOGGER.severe(e.getClass().getSimpleName() + ": " + e.getMessage() + " (at parsing file: " + path + ")");
                 throw new RuntimeException(e);

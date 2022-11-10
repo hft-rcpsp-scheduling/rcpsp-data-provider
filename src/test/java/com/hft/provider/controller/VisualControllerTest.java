@@ -35,7 +35,7 @@ class VisualControllerTest {
 
     @Test
     void visualizeSolution() throws Exception {
-        Project project = new ProjectReader().parseProject("projects/j30/j301_1.sm");
+        Project project = ProjectReader.parseProject("projects/j30/j301_1.sm");
         String requestJson = JsonFactory.convertToJson(project);
         MvcResult result = mockMvc.perform(
                         post("/api/visualize/solution")

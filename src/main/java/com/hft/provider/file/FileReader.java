@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class FileReader {
+    private final static PathMatchingResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
 
     /**
      * Note: Don't forget to close the reader.
@@ -22,7 +23,7 @@ public abstract class FileReader {
      * @return reader of input stream
      * @throws IOException if input stream is null
      */
-    protected BufferedReader getResourceReader(String resourcePath) throws IOException {
+    protected static BufferedReader getResourceReader(String resourcePath) throws IOException {
         InputStream inputStream = FileReader.class.getClassLoader().getResourceAsStream(resourcePath);
         if (inputStream == null)
             throw new IOException("No content at " + resourcePath);
@@ -36,7 +37,7 @@ public abstract class FileReader {
      * @throws IOException if input stream is null
      */
 
-    protected List<String> getDirectoryPaths(String baseDir) throws IOException {
+    protected static List<String> getDirectoryPaths(String baseDir) throws IOException {
         String rootUri = getResource(baseDir).getURI().toString();
         String utf8RootUri = URLDecoder.decode(rootUri.endsWith("/") ? rootUri : rootUri + "/", StandardCharsets.UTF_8);
         // Get direct children names
@@ -52,7 +53,7 @@ public abstract class FileReader {
      * @param line text line
      * @return if line starts with digit (whitespace gets ignored)
      */
-    protected boolean lineStartsNotWithNumber(String line) {
+    protected static boolean lineStartsNotWithNumber(String line) {
         return !Character.isDigit(line.replaceAll(" ", "").charAt(0));
     }
 
@@ -60,12 +61,12 @@ public abstract class FileReader {
      * @param path full path divided by '/'
      * @return last part of the path as file name
      */
-    protected String extractFileName(String path) {
+    protected static String extractFileName(String path) {
         String[] pathSplit = path.split("/");
         return pathSplit[pathSplit.length - 1];
     }
 
-    private Resource[] getResourcesIn(String rootPath) throws IOException {
+    private static Resource[] getResourcesIn(String rootPath) throws IOException {
         String rootUri = getResource(rootPath).getURI().toString();
         String childPaths = (rootPath.endsWith("/")) ? rootPath + "**" : rootPath + "/**";
         // Filter only direct children
@@ -82,11 +83,11 @@ public abstract class FileReader {
         }).toArray(Resource[]::new);
     }
 
-    private Resource[] getResources(String path) throws IOException {
-        return new PathMatchingResourcePatternResolver().getResources(path.replace("\\", "/"));
+    private static Resource[] getResources(String path) throws IOException {
+        return resourceResolver.getResources(path.replace("\\", "/"));
     }
 
-    private Resource getResource(String path) {
-        return new PathMatchingResourcePatternResolver().getResource(path.replace("\\", "/"));
+    private static Resource getResource(String path) {
+        return resourceResolver.getResource(path.replace("\\", "/"));
     }
 }

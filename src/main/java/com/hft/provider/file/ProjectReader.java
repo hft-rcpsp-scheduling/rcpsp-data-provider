@@ -9,11 +9,15 @@ import java.util.*;
 public class ProjectReader extends FileReader {
     private final static String PROJECT_PATH = "projects/";
 
+    private ProjectReader() {
+        // blocks object creation
+    }
+
     /**
      * @return list with full paths of files in the project directory
      * @throws IOException if input stream is null
      */
-    public List<String> getAllFilePaths() throws IOException {
+    public static List<String> getAllFilePaths() throws IOException {
         List<String> paths = new ArrayList<>();
         for (String directory : getDirectoryPaths(PROJECT_PATH)) {
             paths.addAll(getDirectoryPaths(directory));
@@ -26,7 +30,7 @@ public class ProjectReader extends FileReader {
      * @return project with all available properties from file
      * @throws IOException if input stream is null
      */
-    public Project parseProject(String resourceFilePath) throws IOException {
+    public static Project parseProject(String resourceFilePath) throws IOException {
         String fileName = extractFileName(resourceFilePath);
 
         Project project = new Project();
@@ -107,7 +111,7 @@ public class ProjectReader extends FileReader {
 
     // === PRIVATE =====================================================================================================
 
-    private ScanningState identifyScanningState(ScanningState currentState, String line) {
+    private static ScanningState identifyScanningState(ScanningState currentState, String line) {
         return switch (currentState) {
             case STARTED -> line.startsWith("jobs") ? ScanningState.INFORMATION : ScanningState.STARTED;
             case INFORMATION -> line.startsWith("jobnr.") ? ScanningState.RELATIONS : ScanningState.INFORMATION;
@@ -123,7 +127,7 @@ public class ProjectReader extends FileReader {
      * @param jobs map with empty predecessor fields (successors required)
      * @return map values with filled predecessor fields
      */
-    private List<Job> processPredecessors(Map<Integer, Job> jobs) {
+    private static List<Job> processPredecessors(Map<Integer, Job> jobs) {
         for (Job job : jobs.values()) {
             for (int successorNr : job.getSuccessors()) {
                 Job successor = jobs.get(successorNr);
@@ -139,7 +143,7 @@ public class ProjectReader extends FileReader {
      * @param fileName like j1201_10.sm
      * @return j{size}1_10.sm
      */
-    private int extractSize(String fileName) {
+    private static int extractSize(String fileName) {
         String number = fileName.split("_")[0].replaceAll("j", "");
         if (number.startsWith("30"))
             return 30;
@@ -155,7 +159,7 @@ public class ProjectReader extends FileReader {
      * @param size     j{size}1_10.sm
      * @return j120{par}_10.sm
      */
-    private int extractPar(String fileName, Integer size) {
+    private static int extractPar(String fileName, Integer size) {
         String number = fileName.split("_")[0]
                 .replaceAll("j", "");
         return Integer.parseInt(number.replaceFirst(size.toString(), ""));
@@ -165,7 +169,7 @@ public class ProjectReader extends FileReader {
      * @param fileName like j3048_10.sm
      * @return j3048_{inst}.sm
      */
-    private int extractInst(String fileName) {
+    private static int extractInst(String fileName) {
         return Integer.parseInt(
                 fileName.split("_")[1]
                         .split("\\.")[0]);

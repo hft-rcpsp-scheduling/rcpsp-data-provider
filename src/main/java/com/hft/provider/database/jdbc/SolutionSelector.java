@@ -37,7 +37,7 @@ public class SolutionSelector extends JdbcExecutor {
      * @throws SQLException if a database access error occurs or this method is called on a closed result set
      */
     public List<StoredSolution> selectSolutions(String creator, Integer size, Integer par, Integer inst) throws IOException, SQLException {
-        String selectString = new StatementReader().readSelectSolution();
+        String selectString = StatementReader.readSelectSolution();
         if (creator != null || size != null || par != null || inst != null) {
             selectString += " WHERE ";
         }

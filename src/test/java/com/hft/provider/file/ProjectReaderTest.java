@@ -11,11 +11,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProjectReaderTest {
-    ProjectReader projectReader = new ProjectReader();
 
     @Test
     void getAllFilePaths() throws IOException {
-        List<String> paths = projectReader.getAllFilePaths();
+        List<String> paths = ProjectReader.getAllFilePaths();
         assertNotNull(paths);
         assertFalse(paths.isEmpty(), "Paths not empty.");
         assertTrue(paths.get(0).endsWith(".sm"), "Ends with '.sm'");
@@ -24,7 +23,7 @@ class ProjectReaderTest {
 
     @Test
     void parseFile301_1() throws IOException {
-        Project project = projectReader.parseProject("projects/j30/j301_1.sm");
+        Project project = ProjectReader.parseProject("projects/j30/j301_1.sm");
         assertNotNull(project);
         assertEquals(30, project.getSize());
         assertEquals(1, project.getPar());
@@ -79,10 +78,10 @@ class ProjectReaderTest {
 
     @Test
     void parseAllFiles() throws IOException {
-        List<String> paths = projectReader.getAllFilePaths();
+        List<String> paths = ProjectReader.getAllFilePaths();
         List<Project> projects = new ArrayList<>();
         for (String path : paths) {
-            projects.add(projectReader.parseProject(path));
+            projects.add(ProjectReader.parseProject(path));
         }
         assertEquals(2040, projects.size());
     }
