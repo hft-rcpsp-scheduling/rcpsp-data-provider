@@ -9,7 +9,8 @@ infrastructure for scheduling-algorithm implementations and defines the input- a
 application can store solutions for later use.
 
 Please read the [Container Section](#Container) to run the application and
-the [Development Documentation](.doc/development.md) to enhance the application.
+the [Development Documentation](.doc/development.md) to enhance the application. If there are still some questions,
+maybe the [FAQ Page](.doc/faq.md) can help out.
 
 ## REST API
 
@@ -129,3 +130,4 @@ docker compose rm --stop --force
 * [Development Documentation](.doc/development.md)
 * [Deployment Documentation](.doc/deployment.md)
 * [Postman Load Testing](.doc/postman.md)
+* [FAQ](.doc/faq.md)
