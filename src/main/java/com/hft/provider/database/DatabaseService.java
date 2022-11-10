@@ -143,7 +143,7 @@ public class DatabaseService {
     public void insertProjects(List<ProjectEntity> entities) {
         LOGGER.info("Starting to save " + entities.size() + " projects to the database.");
         projectRepo.saveAllFast(entities);
-        LOGGER.info("Finished saving projects to the database.");
+        LOGGER.info("Successfully saved " + entities.size() + " projects to the database.");
     }
 
     // === PRIVATE =====================================================================================================
@@ -160,7 +160,7 @@ public class DatabaseService {
                 throw new RuntimeException(e);
             }
         }).toList();
-        LOGGER.info("Successfully parsed " + entities.size() + " of " + filePaths.size() + " projects.");
+        LOGGER.fine("Successfully parsed " + entities.size() + " of " + filePaths.size() + " projects.");
         return entities;
     }
 }

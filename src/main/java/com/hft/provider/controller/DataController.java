@@ -83,7 +83,7 @@ public class DataController {
             @ApiParam(value = "Creator ID", example = "AI") @RequestParam(required = false) String creator,
             @RequestBody Project solution)
             throws InvalidObjectException {
-        LOGGER.info("Request saving solution to database.");
+        LOGGER.info("Request saving solution to database (size=" + solution.getSize() + ", par=" + solution.getPar() + ", inst=" + solution.getInst() + ")");
         Feedback feedback = SolutionEvaluator.evaluate(solution, new Feedback());
         if (!feedback.isFeasible()) {
             throw new InvalidObjectException("Solution is not feasible. " + feedback.getNotFeasibleReason());

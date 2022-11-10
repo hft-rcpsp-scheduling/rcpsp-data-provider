@@ -24,7 +24,7 @@ public class EvaluationController {
     @ApiOperation("Evaluate feasibility of solution.")
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Feedback> validate(@RequestBody Project solution) throws IOException {
-        LOGGER.info("Fetch makespans from file (size=" + solution.getSize() + ", par=" + solution.getPar() + ", inst=" + solution.getInst() + ")");
+        LOGGER.info("Requesting evaluation of solution (size=" + solution.getSize() + ", par=" + solution.getPar() + ", inst=" + solution.getInst() + ")");
         List<Feedback> records = new MakespanReader().parseMakespans("makespans/j" + solution.getSize() + "hrs.sm");
         Feedback feedback = records.stream()
                 .filter(f -> f.getSize() == solution.getSize() && f.getPar() == solution.getPar() && f.getInst() == solution.getInst())
