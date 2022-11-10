@@ -54,6 +54,13 @@ sudo netstat -plnut
 ```
 
 Check the log of your Container:
+
 ```shell
 sudo docker logs -n "all" rcpsp-provider-app
 ```
+
+### Improve Memory Management
+
+To prevent your VM from crashing when running out of main memory, we provide a swap. This can be done with the help of
+the following [tutorial](https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-20-04). Our
+swap was set up with 5Gb.
