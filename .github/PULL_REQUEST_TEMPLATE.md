@@ -2,11 +2,15 @@
 
 Closes #`issue`
 
+_Or related to:_
+
+- [x] #`issue`
+
 ### What this PR changes/adds
 
 _Briefly describe the completed tasks._
 
--[x] `task`
+- [x] `task`
 
 ### Further notes
 
