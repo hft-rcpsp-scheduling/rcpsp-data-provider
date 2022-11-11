@@ -2,25 +2,26 @@
 name: Bug report
 about: Create a report to help us improve
 title: ''
-labels: 'type: bug'
+labels: 'type / bug'
 assignees: ''
 
 ---
 
 **Describe the bug**
-Add clear and concise description of what the bug is here:
+_Add clear and concise description of what the bug is here._
 
 **To Reproduce**
 Steps to reproduce the behavior:
-1. Request Endpoint: '...'
-2. Request Parameter/Body: '....'
+
+1. Request Endpoint: `...`
+2. Request Parameter/Body: `...`
 3. See error
 
 **Expected behavior**
-A clear and concise description of what you expected to happen.
+_A clear and concise description of what you expected to happen._
 
 **Screenshots**
-If applicable, add screenshots to help explain your problem here:
+_If applicable, add screenshots to help explain your problem here._
 
 **Additional context**
-Add any other context about the problem here:
+_Add any other context about the problem here._

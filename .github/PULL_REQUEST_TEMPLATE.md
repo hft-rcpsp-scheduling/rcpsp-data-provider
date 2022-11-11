@@ -2,7 +2,7 @@
 
 Closes #`issue`
 
-_Or related to:_
+__Or related to:__
 
 - [x] #`issue`
 

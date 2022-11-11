@@ -2,19 +2,20 @@
 name: Feature request
 about: Suggest an idea for this project
 title: ''
-labels: 'draft, type: enhancement'
+labels: 'draft, type / enhancement'
 assignees: ''
 
 ---
 
-**Is your feature request related to a problem? Please describe or delete section.**
-A clear and concise description of what the problem is.
+**Is your feature request related to a problem?**
+_A clear and concise description of what the problem is._
 
 **Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+_A clear and concise description of what you want to happen._
 
 **Additional context**
-Add any other context or screenshots about the feature request here.
+_Add any other context or screenshots about the feature request here._
 
 ## Refinement
-Tasks to realize the feature request defined by the team.
+
+_Tasks to realize the feature request defined by the team._
