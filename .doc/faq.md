@@ -30,5 +30,6 @@ The team tries to not do any severe changes to the database, so we can hopefully
 
 ### No answer found to your problem?
 
-Please don't be shy to create a [new Issue](https://github.com/hft-rcpsp-scheduling/rcpsp-data-provider/issues/new) with
+Please don't be shy to create
+a [new Issue](https://github.com/hft-rcpsp-scheduling/rcpsp-data-provider/issues/new/choose) with
 the tag `Question`. We try to improve the application and the documentation to make the usability as easy as possible.
