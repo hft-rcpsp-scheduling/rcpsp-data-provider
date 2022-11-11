@@ -4,6 +4,8 @@ import com.hft.provider.controller.model.Feedback;
 import com.hft.provider.controller.model.Job;
 import com.hft.provider.controller.model.Project;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -12,65 +14,82 @@ public class SolutionEvaluator {
 
     /**
      * @param solution to evaluate
-     * @param feedback feedback with matching identifier and given makespan
+     * @param feedback feedback with matching identifier and given makespan (record)
      * @return feedback with full evaluation
      */
     public static Feedback evaluate(Project solution, Feedback feedback) {
-        if (!checkStartDays(solution)) {
+        String checkStartDays = evaluateStartDays(solution);
+
+        if (!checkStartDays.isEmpty()) {
             feedback.setFeasible(false);
-            feedback.setNotFeasibleReason("Start days of the jobs are missing.");
+            feedback.setNotFeasibleReason(checkStartDays);
             return feedback;
         }
-        feedback.setFeasible(true);
-        String notFeasibleReason = "";
-        if (!evaluateRelationships(solution)) {
-            feedback.setFeasible(false);
-            notFeasibleReason += "The relationships are an issue.";
-        }
-        if (!evaluateResourceUsage(solution)) {
-            feedback.setFeasible(false);
-            if (!notFeasibleReason.isEmpty())
-                notFeasibleReason += " ";
-            notFeasibleReason += "The resource boundaries are an issue.";
-        }
-        Integer solutionTimeSpan = checkSolutionTimespan(solution);
+
+        Integer solutionTimeSpan = extractSolutionTimespan(solution);
         feedback.setSolutionTimeSpan(solutionTimeSpan);
-        if (solutionTimeSpan == null) {
+        feedback.setNewRecord(solutionTimeSpan != null && solutionTimeSpan <= feedback.getRecordTimeSpan());
+
+        String checkRelationships = evaluateRelationships(solution);
+        String checkResources = evaluateResourceUsage(solution);
+        String checkTimeSpan = evaluateTimespan(solution, solutionTimeSpan);
+
+        String rejectionReason = concatReasons(List.of(checkRelationships, checkResources, checkTimeSpan));
+        if (rejectionReason.isEmpty()) {
+            feedback.setFeasible(true);
+        } else {
             feedback.setFeasible(false);
-            if (!notFeasibleReason.isEmpty())
-                notFeasibleReason += " ";
-            notFeasibleReason += "The solution timespan is an issue.";
+            feedback.setNotFeasibleReason(rejectionReason);
         }
-        if (!feedback.isFeasible()) {
-            feedback.setNotFeasibleReason(notFeasibleReason);
-        }
-        feedback.setNewRecord(feedback.getSolutionTimeSpan() != null && feedback.getSolutionTimeSpan() <= feedback.getRecordTimeSpan());
         return feedback;
     }
 
     // === PRIVATE =====================================================================================================
 
-    private static boolean checkStartDays(Project solution) {
+    /**
+     * @param solution input data
+     * @return failure reason or empty string
+     */
+    private static String evaluateStartDays(Project solution) {
+        StringBuilder reason = new StringBuilder();
         for (Job job : solution.getJobs()) {
-            if (job.getStartDay() == null || job.getStartDay() < 0 || job.getStartDay() > solution.getHorizon())
-                return false;
+            if (job.getStartDay() == null) {
+                reason.append("No Start Day (job=").append(job.getNr()).append("). ");
+                continue;
+            }
+            if (job.getStartDay() < 0) {
+                reason.append("Start Day < 0 (job=").append(job.getNr()).append("). ");
+            }
+            if (job.getStartDay() > solution.getHorizon()) {
+                reason.append("Start Day > Horizon (job=").append(job.getNr()).append("). ");
+            }
         }
-        return true;
+        return reason.toString();
     }
 
-    private static boolean evaluateRelationships(Project solution) {
+    /**
+     * @param solution input data
+     * @return failure reason or empty string
+     */
+    private static String evaluateRelationships(Project solution) {
+        StringBuilder reason = new StringBuilder();
         Map<Integer, Job> map = solution.getJobs().stream().collect(Collectors.toMap(Job::getNr, Function.identity()));
         for (Job job : map.values()) {
             int endDay = job.getStartDay() + job.getDurationDays();
             for (int successor : job.getSuccessors()) {
                 if (map.get(successor) == null || map.get(successor).getStartDay() < endDay)
-                    return false;
+                    reason.append("Relationship violated (job=").append(job.getNr()).append(", successor=").append(successor).append("). ");
             }
         }
-        return true;
+        return reason.toString();
     }
 
-    private static boolean evaluateResourceUsage(Project solution) {
+    /**
+     * @param solution input data
+     * @return failure reason or empty string
+     */
+    private static String evaluateResourceUsage(Project solution) {
+        StringBuilder reason = new StringBuilder();
         int[][] usagePerDay = new int[4][solution.getHorizon()];
         for (Job job : solution.getJobs()) {
             Integer start = job.getStartDay();
@@ -82,16 +101,42 @@ public class SolutionEvaluator {
             }
         }
         for (int day = 0; day < usagePerDay[0].length; day++) {
-            if (usagePerDay[0][day] > solution.getR1CapacityPerDay() ||
-                    usagePerDay[1][day] > solution.getR2CapacityPerDay() ||
-                    usagePerDay[2][day] > solution.getR3CapacityPerDay() ||
-                    usagePerDay[3][day] > solution.getR4CapacityPerDay())
-                return false;
+            if (usagePerDay[0][day] > solution.getR1CapacityPerDay()) {
+                reason.append("Resource violated (r1, day=").append(day).append("). ");
+            }
+            if (usagePerDay[1][day] > solution.getR2CapacityPerDay()) {
+                reason.append("Resource violated (r2, day=").append(day).append("). ");
+            }
+            if (usagePerDay[2][day] > solution.getR3CapacityPerDay()) {
+                reason.append("Resource violated (r3, day=").append(day).append("). ");
+            }
+            if (usagePerDay[3][day] > solution.getR4CapacityPerDay()) {
+                reason.append("Resource violated (r4, day=").append(day).append("). ");
+            }
         }
-        return true;
+        return reason.toString();
     }
 
-    private static Integer checkSolutionTimespan(Project solution) {
+    /**
+     * @param solution input data
+     * @param timespan number or null
+     * @return failure reason or empty string
+     */
+    private static String evaluateTimespan(Project solution, Integer timespan) {
+        if (timespan == null) {
+            return "No timespan could be calculated from the last job. ";
+        } else if (timespan > solution.getHorizon()) {
+            return "Timespan of the solution is larger than the horizon. ";
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * @param solution input data
+     * @return start day of the lst job as timespan or null if not found
+     */
+    private static Integer extractSolutionTimespan(Project solution) {
         try {
             return solution.getJobs()
                     .stream().filter(job -> job.getNr() == solution.getJobs().size())
@@ -100,5 +145,24 @@ public class SolutionEvaluator {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * @param reasons list with strings that can be null and empty
+     * @return appended reasons with new line separators
+     */
+    private static String concatReasons(List<String> reasons) {
+        Iterator<String> iterator = reasons.iterator();
+        StringBuilder concatReason = new StringBuilder();
+        while (iterator.hasNext()) {
+            String reason = iterator.next();
+            if (reason != null && !reason.isEmpty()) {
+                concatReason.append(reason);
+                if (iterator.hasNext()) {
+                    concatReason.append("\n");
+                }
+            }
+        }
+        return concatReason.toString();
     }
 }
