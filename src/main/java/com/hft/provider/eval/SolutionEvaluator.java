@@ -4,7 +4,6 @@ import com.hft.provider.controller.model.Feedback;
 import com.hft.provider.controller.model.Job;
 import com.hft.provider.controller.model.Project;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -54,14 +53,14 @@ public class SolutionEvaluator {
         StringBuilder reason = new StringBuilder();
         for (Job job : solution.getJobs()) {
             if (job.getStartDay() == null) {
-                reason.append("No Start Day (job=").append(job.getNr()).append("). ");
+                reason.append("No Start Day (job=").append(job.getNr()).append(") ");
                 continue;
             }
             if (job.getStartDay() < 0) {
-                reason.append("Start Day < 0 (job=").append(job.getNr()).append("). ");
+                reason.append("Start Day < 0 (job=").append(job.getNr()).append(") ");
             }
             if (job.getStartDay() > solution.getHorizon()) {
-                reason.append("Start Day > Horizon (job=").append(job.getNr()).append("). ");
+                reason.append("Start Day > Horizon (job=").append(job.getNr()).append(") ");
             }
         }
         return reason.toString();
@@ -78,10 +77,10 @@ public class SolutionEvaluator {
             int endDay = job.getStartDay() + job.getDurationDays();
             for (int successor : job.getSuccessors()) {
                 if (map.get(successor) == null || map.get(successor).getStartDay() < endDay)
-                    reason.append("Relationship violated (job=").append(job.getNr()).append(", successor=").append(successor).append("). ");
+                    reason.append("(job=").append(job.getNr()).append(" and successor=").append(successor).append(") ");
             }
         }
-        return reason.toString();
+        return reason.isEmpty() ? "" : "Relationships violated: " + reason;
     }
 
     /**
@@ -102,19 +101,19 @@ public class SolutionEvaluator {
         }
         for (int day = 0; day < usagePerDay[0].length; day++) {
             if (usagePerDay[0][day] > solution.getR1CapacityPerDay()) {
-                reason.append("Resource violated (r1, day=").append(day).append("). ");
+                reason.append("(r1 at day=").append(day).append(") ");
             }
             if (usagePerDay[1][day] > solution.getR2CapacityPerDay()) {
-                reason.append("Resource violated (r2, day=").append(day).append("). ");
+                reason.append("(r2 at day=").append(day).append(") ");
             }
             if (usagePerDay[2][day] > solution.getR3CapacityPerDay()) {
-                reason.append("Resource violated (r3, day=").append(day).append("). ");
+                reason.append("(r3 at day=").append(day).append(") ");
             }
             if (usagePerDay[3][day] > solution.getR4CapacityPerDay()) {
-                reason.append("Resource violated (r4, day=").append(day).append("). ");
+                reason.append("(r4 at day=").append(day).append(") ");
             }
         }
-        return reason.toString();
+        return reason.isEmpty() ? "" : "Resources violated: " + reason;
     }
 
     /**
@@ -152,13 +151,12 @@ public class SolutionEvaluator {
      * @return appended reasons with new line separators
      */
     private static String concatReasons(List<String> reasons) {
-        Iterator<String> iterator = reasons.iterator();
         StringBuilder concatReason = new StringBuilder();
-        while (iterator.hasNext()) {
-            String reason = iterator.next();
+        for (int i = 0; i < reasons.size(); i++) {
+            String reason = reasons.get(i);
             if (reason != null && !reason.isEmpty()) {
-                concatReason.append(reason);
-                if (iterator.hasNext()) {
+                concatReason.append(reason.trim()).append(";");
+                if (i + 1 < reasons.size() && !reasons.get(i + 1).isEmpty()) {
                     concatReason.append("\n");
                 }
             }
