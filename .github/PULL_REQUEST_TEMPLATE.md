@@ -2,9 +2,9 @@
 
 Closes #`issue`
 
-__Or related to:__
+**Or related to:**
 
-- [x] #`issue`
+- [ ] #`issue`
 
 ### What this PR changes/adds
 
