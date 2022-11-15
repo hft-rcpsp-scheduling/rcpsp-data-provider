@@ -45,7 +45,7 @@ public class SwaggerConfig {
                 "Educational Project",
                 "0.0.1",
                 "https://www.apache.org/licenses/LICENSE-2.0.html",
-                new Contact("Felix Steinke", "https://github.com/felixsteinke", "No direct mail contact."),
+                new Contact("HFT Scheduling Group", "https://github.com/hft-rcpsp-scheduling", "No direct mail contact."),
                 "No License yet.",
                 "https://www.apache.org/licenses/LICENSE-2.0.html",
                 Collections.emptyList());
