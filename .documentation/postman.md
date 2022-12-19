@@ -1,6 +1,6 @@
 # Load Testing
 
-## Postman Collection
+## 1. Postman Collection
 
 > Prerequisite: Download and Install [Postman](https://www.postman.com/downloads/)
 
@@ -13,15 +13,15 @@ __Note:__ The header of fields like `Headers: Content-Type = application/json` a
 generated. So make sure to add them by
 hand ([Postman Issue](https://github.com/postmanlabs/postman-app-support/issues/8911)).
 
-## Sequential Load Testing (Postman Runner)
+## 2. Sequential Load Testing (Postman Runner)
 
 1. Open Postman Runner (button in the top left corner)
 2. Adjust run settings like `iterations` & `delay` and select requests from the collection
 3. Start the Runner
 
-## Advanced Load Testing (Grafana K6)
+## 3. Advanced Load Testing (Grafana K6)
 
-### K6 Script
+### 3.1. K6 Script
 
 > Prerequisite: Download and Install [NodeJS](https://nodejs.org/en/download/) to
 > use [Postman to K6 Library](https://github.com/apideck-libraries/postman-to-k6)
@@ -41,7 +41,7 @@ npx @apideck/postman-to-k6 load-get-solution.postman_collection.json -o solution
 
 __Note:__ Keep in mind to execute this in the `.postman`-directory and name the output always `...-k6-script.js`.
 
-### K6 Load Testing
+### 3.2. K6 Load Testing
 
 > Prerequisite: Download the [K6](https://k6.io/docs/get-started/installation/) installer
 > from [GitHub](https://github.com/grafana/k6/releases)

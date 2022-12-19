@@ -8,9 +8,19 @@ This application provides an API to __serve raw data (projects)__ and __validate
 infrastructure for scheduling-algorithm implementations and defines the input- and output-format. In addition, the
 application can store solutions for later use.
 
-Please read the [Container Section](#Container) to run the application and
-the [Development Documentation](.doc/development.md) to enhance the application. If there are still some questions,
-maybe the [FAQ Page](.doc/faq.md) can help out.
+Please read the [Container Section](.documentation/docker.md) to run the application and
+the [Development Documentation](.documentation/dev-tools.md) to enhance the application. If there are still some
+questions,
+maybe the [FAQ Page](.documentation/faq.md) can help out.
+
+## Documentation
+
+* [API Usage](.documentation/api-usage.md)
+* [Development Tools](.documentation/dev-tools.md)
+* [Docker Commands](.documentation/docker.md)
+* [Deployment](.documentation/deployment.md)
+* [Postman Load Testing](.documentation/postman.md)
+* [FAQ](.documentation/faq.md)
 
 ## REST API
 
@@ -21,40 +31,36 @@ maybe the [FAQ Page](.doc/faq.md) can help out.
 Have a look into the last [Releases](https://github.com/hft-rcpsp-scheduling/rcpsp-data-provider/releases) to get more
 information.
 
-### Scheduling Usage
-
-This shows the main use-case of the api:
+## Project Structure
 
 ```
-API                                   Scheduling Client
- | <----- request data for one project ----- | 
- | ------------ send project --------------> |   
- |                                           | execute scheudling algorithm
- |                                           | fill the start-days in the project
- | <- request evaluation for the solution -- |
- | ------------ send feedback -------------> |                          
- |                                           | check feasibility from the feedback
+root
+ |__ .docker                            --> non standard docker descriptors
+ |__ .documentation                     --> documentation to different topics
+ |__ .github                            --> github descriptors for workflows (actions) and templates (issues & PRs)
+ |__ .mvn                               --> devault spring mvn wrapper library
+ |__ .postman                           --> postman collections for load testing
+ |__ src                                
+ |    |__ main                          
+ |    |     |__ java/com/hft/provider   --> root package
+ |    |     |     |__ config            --> global spring configuration beans
+ |    |     |     |__ controller        --> rest controllers for the api
+ |    |     |     |     |__ model       --> models exposed by the api
+ |    |     |     |__ database          --> internal database classes for projects & solutions
+ |    |     |     |__ eval              --> solution evaluation
+ |    |     |     |__ excel             --> classes to generate different excel files
+ |    |     |     |__ file              --> reader for resource files
+ |    |     |     |__ Application.java  --> Main-Class
+ |    |     |__ resources               --> directory with app-configs, projects** & their makespans**
+ |    |__ test                          --> mirrored package structure of the main project with test classes
+ |__ docker-compose.yml & Dockerfile    --> standard docker descriptors
+ |__ mvnw & mvnw.cmd                    --> default spring mvn wrapper
+ |__ pom.xml                            --> maven descriptor with dependencies
+ 
 ```
 
-> Open the Swagger-UI to get specific information about the REST-calls and their related data.
-
-### Visualization Usage
-
-```
-API                                    Scheduling Client
- |                                           | execute scheudling algorithm
- | <-------- request visualization --------- |
- | ------- send visualization file --------> |
-```
-
-```
-                   UI                         API              Scheduling Client
-                    |                          |                       | execute scheudling algorithm
-                    |                          | <-- save solution --- |  
-                    | -- request solutions --> |                       | 
-                    | <--- send solutions ---- |                       |
-visualize solutions |                          |                       |
-```
+> **Project- and Makespan-Resources are
+> from [https://www.om-db.wi.tum.de/psplib/getdata_sm.html](https://www.om-db.wi.tum.de/psplib/getdata_sm.html).
 
 ## Configuration
 
@@ -76,58 +82,3 @@ visualize solutions |                          |                       |
 | logging.level.root                         |                INFO                 | Values: `DEBUG` -> `INFO` -> `WARN` -> `ERROR` (mode for general logging)        |
 
 > To get more information about the configuration, please read the official documentations.
-
-## Container
-
-* [Dockerfile](Dockerfile)
-* Uses production profile: [application-prod.properties](src/main/resources/application-prod.properties)
-
-### Latest Image
-
-* [docker-compose.yml](docker-compose.yml)
-* Used to run a stable version of the application.
-* [docker-compose-prod.yml](.docker/docker-compose-prod.yml) maps the api-port to `80`
-
-__Pull & Run the stack:__
-
-```shell
-docker compose pull
-docker compose up -d
-```
-
-__Stop & Delete stack:__
-
-```shell
-docker compose rm --stop --force
-```
-
-### Local Image
-
-* [docker-compose-build.yml](.docker/docker-compose-build.yml)
-* Used for development or run old versions of the application.
-
-__Build & Run the stack:__
-
-```shell
-docker compose --file .docker/docker-compose-build.yml up --build
-```
-
-__Build & Run the container (requires separate database):__
-
-```shell
-docker build -t data-provider .
-docker run -d -p 8080:8080 --name provider-app data-provider
-```
-
-__Stop & Delete stack:__
-
-```shell
-docker compose rm --stop --force
-```
-
-## Further information
-
-* [Development Documentation](.doc/development.md)
-* [Deployment Documentation](.doc/deployment.md)
-* [Postman Load Testing](.doc/postman.md)
-* [FAQ](.doc/faq.md)

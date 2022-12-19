@@ -1,8 +1,8 @@
 # Development
 
-## System Requirements
+## 1. System Requirements
 
-### Java 17
+### 1.1. Java 17
 
 1. Download: [Java 17+](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
 2. Install the executable
@@ -11,7 +11,7 @@
 5. Edit > `PATH` > New: `%JAVA_HOME%\bin`
 6. Test command: `java -version`
 
-### Maven
+### 1.2. Maven
 
 1. Download: [Maven 3.8.3+](https://maven.apache.org/download.cgi)
 2. Unzip it to: `C:\Program Files\maven`
@@ -20,21 +20,21 @@
 5. Edit > `PATH` > New: `%MAVEN_HOME%\bin`
 6. Test command: `mvn -v`
 
-### MySQL
+### 1.3. MySQL
 
 1. Download: [MySQL 8 Server](https://dev.mysql.com/downloads/installer/)
 2. Install the executable
 3. Select `Server only`
 4. Default `root` password: `password` (not for productive DB!)
 
-### Docker
+### 1.4. Docker
 
 1. Download: [Docker Desktop](https://www.docker.com/products/docker-desktop)
 2. Install the executable
 
-## Libraries
+## 2. Libraries
 
-### Reference Documentation
+### 2.1. Reference Documentation
 
 For further reference, please consider the following sections:
 
@@ -44,7 +44,7 @@ For further reference, please consider the following sections:
 * [Spring Web](https://docs.spring.io/spring-boot/docs/2.7.4/reference/htmlsingle/#web)
 * [Spring Data JPA](https://docs.spring.io/spring-boot/docs/2.7.4/reference/htmlsingle/#data.sql.jpa-and-spring-data)
 
-### Guides
+### 2.2. Guides
 
 The following guides illustrate how to use some features concretely:
 
