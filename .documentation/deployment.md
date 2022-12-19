@@ -1,8 +1,6 @@
-# Deployment
+# Deployment (Cloud Setup)
 
-## Cloud Setup
-
-### BW Cloud Instance
+## 1. BW Cloud Instance
 
 1. Register at the BwCloud [https://login.bwidm.de/](https://login.bwidm.de/)
 2. Login at [https://portal.bw-cloud.org/project/](https://portal.bw-cloud.org/project/)
@@ -19,7 +17,7 @@
 ssh ubuntu@193.196.52.129
 ```
 
-### VM Preparation
+## 2. VM Preparation
 
 Update the Server:
 
@@ -59,7 +57,7 @@ Check the log of your Container:
 sudo docker logs -n "all" rcpsp-provider-app
 ```
 
-### Improve Memory Management
+## 3. Improve Memory Management
 
 To prevent your VM from crashing when running out of main memory, we provide a swap. This can be done with the help of
 the following [tutorial](https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-20-04). Our
