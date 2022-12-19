@@ -25,7 +25,7 @@ public class SolutionSelector extends JdbcExecutor {
         String sqlQuery = """
                 select s.id as id,
                        s.creator as creator,
-                       s.makespan as makespan,
+                       MIN(s.makespan) as makespan,
                        p.size as size,
                        p.par as par,
                        p.inst as inst
