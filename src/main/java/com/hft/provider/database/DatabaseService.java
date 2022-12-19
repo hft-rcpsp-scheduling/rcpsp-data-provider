@@ -2,6 +2,7 @@ package com.hft.provider.database;
 
 import com.hft.provider.controller.model.Job;
 import com.hft.provider.controller.model.Project;
+import com.hft.provider.controller.model.SolutionStatistic;
 import com.hft.provider.controller.model.StoredSolution;
 import com.hft.provider.database.jdbc.SolutionSelector;
 import com.hft.provider.file.ProjectReader;
@@ -86,6 +87,10 @@ public class DatabaseService {
         } else {
             throw new NoSuchElementException("No project found with id=" + id);
         }
+    }
+
+    public List<SolutionStatistic> selectSolutionStatistics() throws SQLException {
+        return solutionSelector.getSolutionStatistics();
     }
 
     /**

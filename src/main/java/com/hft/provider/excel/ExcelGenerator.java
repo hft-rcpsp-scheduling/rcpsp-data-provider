@@ -142,6 +142,21 @@ public abstract class ExcelGenerator {
      *
      * @param row       of the sheet
      * @param cellIndex of the row
+     * @param value     to insert ({@link Long} - ignores null)
+     */
+    protected void writeRowCell(Row row, int cellIndex, Long value) {
+        if (value != null) {
+            Cell cell = row.createCell(cellIndex);
+            cell.setCellValue(value);
+            cell.setCellStyle(textStyle);
+        }
+    }
+
+    /**
+     * Writes a cell with the text style from {@link ExcelGenerator#createRowStyle()}.
+     *
+     * @param row       of the sheet
+     * @param cellIndex of the row
      * @param value     to insert ({@link Boolean} - ignores null)
      */
     protected void writeRowCell(Row row, int cellIndex, Boolean value) {
