@@ -31,7 +31,7 @@ public class SolutionSelector extends JdbcExecutor {
                        p.inst as inst
                 from solutions s
                 join projects p on p.id = s.project_id
-                group by p.size, p.par, p.inst
+                group by p.id
                 """;
         try (Connection connection = createConnection();
              PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
