@@ -1,6 +1,7 @@
 package com.hft.provider.database.jdbc;
 
 import com.hft.provider.controller.model.Job;
+import com.hft.provider.controller.model.SolutionStatistic;
 import com.hft.provider.controller.model.StoredSolution;
 import com.hft.provider.database.utility.JsonParser;
 import com.hft.provider.file.StatementReader;
@@ -18,6 +19,37 @@ import java.util.logging.Logger;
 @Component
 public class SolutionSelector extends JdbcExecutor {
     private final Logger LOGGER = Logger.getLogger(SolutionSelector.class.getName());
+
+    public List<SolutionStatistic> getSolutionStatistics() throws SQLException {
+        List<SolutionStatistic> stats = new ArrayList<>();
+        String sqlQuery = """
+                select s.id as id,
+                       s.creator as creator,
+                       s.makespan as makespan,
+                       p.size as size,
+                       p.par as par,
+                       p.inst as inst
+                from solutions s
+                join projects p on p.id = s.project_id
+                group by p.size, p.par, p.inst
+                """;
+        try (Connection connection = createConnection();
+             PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    SolutionStatistic stat = new SolutionStatistic();
+                    stat.setId(resultSet.getLong("id"));
+                    stat.setCreator(resultSet.getString("creator"));
+                    stat.setMakespan(resultSet.getInt("makespan"));
+                    stat.setSize(resultSet.getInt("size"));
+                    stat.setPar(resultSet.getInt("par"));
+                    stat.setInst(resultSet.getInt("inst"));
+                    stats.add(stat);
+                }
+            }
+        }
+        return stats;
+    }
 
     /**
      * <ol>
