@@ -23,15 +23,20 @@ public class SolutionSelector extends JdbcExecutor {
     public List<SolutionStatistic> getSolutionStatistics() throws SQLException {
         List<SolutionStatistic> stats = new ArrayList<>();
         String sqlQuery = """
-                select s.id as id,
-                       s.creator as creator,
-                       MIN(s.makespan) as makespan,
-                       p.size as size,
-                       p.par as par,
-                       p.inst as inst
-                from solutions s
-                join projects p on p.id = s.project_id
-                group by p.id
+                SELECT s.id       as id,
+                       s.creator  as creator,
+                       s.makespan as makespan,
+                       p.size     as size,
+                       p.par      as par,
+                       p.inst     as inst
+                FROM solutions s
+                         INNER JOIN
+                     (SELECT MIN(s1.makespan) as makespan, s1.project_id as project_id
+                      FROM solutions s1
+                      GROUP BY s1.project_id) as sGroup
+                     ON s.project_id = sGroup.project_id
+                         AND s.makespan = sGroup.makespan
+                         JOIN projects p on p.id = s.project_id
                 """;
         try (Connection connection = createConnection();
              PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
