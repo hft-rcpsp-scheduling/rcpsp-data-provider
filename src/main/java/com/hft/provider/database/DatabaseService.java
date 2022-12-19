@@ -102,8 +102,8 @@ public class DatabaseService {
      * @throws SQLException if a database access error occurs or this method is called on a closed result set
      * @throws IOException  if file not found
      */
-    public List<StoredSolution> selectSolutions(String creator, Integer size, Integer par, Integer inst) throws SQLException, IOException {
-        return solutionSelector.selectSolutions(creator, size, par, inst);
+    public List<StoredSolution> selectSolutions(Integer id, String creator, Integer size, Integer par, Integer inst) throws SQLException, IOException {
+        return solutionSelector.selectSolutions(id, creator, size, par, inst);
     }
 
     /**

@@ -51,7 +51,7 @@ class SolutionSelectorTest {
 
     @Test
     void selectAllSolutions() throws SQLException, IOException {
-        List<StoredSolution> solutions = selectorService.selectSolutions(null, null, null, null);
+        List<StoredSolution> solutions = selectorService.selectSolutions(null, null, null, null, null);
         assertNotNull(solutions);
         assertFalse(solutions.isEmpty(), "Solutions empty.");
         StoredSolution s = solutions.stream()
@@ -81,7 +81,7 @@ class SolutionSelectorTest {
 
     @Test
     void selectSolutionByCreator() throws SQLException, IOException {
-        List<StoredSolution> solutions = selectorService.selectSolutions("jdbcTester5", null, null, null);
+        List<StoredSolution> solutions = selectorService.selectSolutions(null, "jdbcTester5", null, null, null);
         assertEquals(1, solutions.size());
 
         StoredSolution s = solutions.get(0);
@@ -98,7 +98,7 @@ class SolutionSelectorTest {
 
     @Test
     void selectSolutionByProjectID() throws SQLException, IOException {
-        List<StoredSolution> solutions = selectorService.selectSolutions(null, 90, 10, 10);
+        List<StoredSolution> solutions = selectorService.selectSolutions(null, null, 90, 10, 10);
         assertEquals(1, solutions.size());
 
         StoredSolution s = solutions.get(0);
@@ -115,7 +115,7 @@ class SolutionSelectorTest {
 
     @Test
     void selectSolutionByCreatorAndProjectID() throws SQLException, IOException {
-        List<StoredSolution> solutions = selectorService.selectSolutions("jdbcTester10", 90, 10, 10);
+        List<StoredSolution> solutions = selectorService.selectSolutions(null, "jdbcTester10", 90, 10, 10);
         assertEquals(1, solutions.size());
 
         StoredSolution s = solutions.get(0);
@@ -132,13 +132,13 @@ class SolutionSelectorTest {
 
     @Test
     void selectSolutionByPartialProjectID() throws SQLException, IOException {
-        List<StoredSolution> solutions = selectorService.selectSolutions(null, 90, 10, null);
+        List<StoredSolution> solutions = selectorService.selectSolutions(null, null, 90, 10, null);
         assertEquals(2, solutions.size());
     }
 
     @Test
     void selectEmptyResult() throws SQLException, IOException {
-        List<StoredSolution> solutions = selectorService.selectSolutions("noTester", 50, 10, null);
+        List<StoredSolution> solutions = selectorService.selectSolutions(null, "noTester", 50, 10, null);
         assertEquals(0, solutions.size());
     }
 }

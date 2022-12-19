@@ -67,14 +67,15 @@ public class DataController {
     @ApiOperation("Get a list of solutions from the database. All parameters are optional.")
     @GetMapping(path = "/solution", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<StoredSolution>> getSolution(
+            @ApiParam(value = "Creator of a solution (optional)", example = "AI") @RequestParam(required = false) Integer solutionId,
             @ApiParam(value = "Creator of a solution (optional)", example = "AI") @RequestParam(required = false) String creator,
             @ApiParam(value = "File: j{size}1_1 (30/60/90/120) (optional)", example = "30") @RequestParam(required = false) Integer size,
             @ApiParam(value = "File: j120{par}_1 (1 to 48/60) (optional)", example = "1") @RequestParam(required = false) Integer par,
             @ApiParam(value = "File: j1201_{inst} (1 to 10) (optional)", example = "1") @RequestParam(required = false) Integer inst)
             throws SQLException, IOException {
-        LOGGER.info("Request solutions from database (creator= " + creator + ", size=" + size + ", par=" + par + ", inst=" + inst + ")");
+        LOGGER.info("Request solutions from database (solutionId=" + solutionId + ", creator= " + creator + ", size=" + size + ", par=" + par + ", inst=" + inst + ")");
         return ResponseEntity.ok(
-                dbService.selectSolutions(creator, size, par, inst));
+                dbService.selectSolutions(solutionId, creator, size, par, inst));
     }
 
     @ApiOperation("Save solution to the database.")

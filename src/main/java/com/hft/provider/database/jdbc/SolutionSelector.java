@@ -73,12 +73,18 @@ public class SolutionSelector extends JdbcExecutor {
      * @throws IOException  if file not found
      * @throws SQLException if a database access error occurs or this method is called on a closed result set
      */
-    public List<StoredSolution> selectSolutions(String creator, Integer size, Integer par, Integer inst) throws IOException, SQLException {
+    public List<StoredSolution> selectSolutions(Integer id, String creator, Integer size, Integer par, Integer inst) throws IOException, SQLException {
         String selectString = StatementReader.readSelectSolution();
-        if (creator != null || size != null || par != null || inst != null) {
+        if (id != null || creator != null || size != null || par != null || inst != null) {
             selectString += " WHERE ";
         }
+        if (id != null) {
+            selectString += "id = ?";
+        }
         if (creator != null) {
+            if (!selectString.endsWith(" WHERE ")) {
+                selectString += " AND ";
+            }
             selectString += "creator = ?";
         }
         if (size != null) {
@@ -101,12 +107,14 @@ public class SolutionSelector extends JdbcExecutor {
         }
 
         if (showSQL)
-            System.out.println("Jdbc: " + selectString + " (creator=" + creator + ", size=" + size + ", par=" + par + ", inst=" + inst + ")");
+            System.out.println("Jdbc: " + selectString + " (id=" + id + ", creator= " + creator + ", size=" + size + ", par=" + par + ", inst=" + inst + ")");
 
         try (Connection connection = createConnection();
              PreparedStatement statement = connection.prepareStatement(selectString)) {
 
             int param = 1;
+            if (id != null)
+                statement.setInt(param++, id);
             if (creator != null)
                 statement.setString(param++, creator);
             if (size != null)

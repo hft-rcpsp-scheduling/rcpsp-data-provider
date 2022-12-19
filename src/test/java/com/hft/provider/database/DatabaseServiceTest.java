@@ -75,7 +75,7 @@ class DatabaseServiceTest {
     @Order(2)
     void selectSolutions() throws SQLException, IOException {
         StoredSolution storedSolution =
-                projectDB.selectSolutions(null, solution40_10_10.getSize(), solution40_10_10.getPar(), solution40_10_10.getInst())
+                projectDB.selectSolutions(null, null, solution40_10_10.getSize(), solution40_10_10.getPar(), solution40_10_10.getInst())
                         .get(0);
 
         assertNotNull(storedSolution.getCreationDate());

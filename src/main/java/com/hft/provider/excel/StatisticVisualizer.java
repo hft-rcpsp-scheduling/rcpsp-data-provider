@@ -9,7 +9,6 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 public class StatisticVisualizer extends ExcelGenerator {
     /**
@@ -52,19 +51,24 @@ public class StatisticVisualizer extends ExcelGenerator {
             writeRowCell(row, 0, record.getSize());
             writeRowCell(row, 1, record.getPar());
             writeRowCell(row, 2, record.getInst());
-            Optional<SolutionStatistic> statOpt = stats.stream().filter(
-                            item -> item.getSize() == record.getSize()
-                                    && item.getPar() == record.getPar()
-                                    && item.getInst() == record.getInst())
-                    .findFirst();
-            if (statOpt.isPresent()) {
-                SolutionStatistic stat = statOpt.get();
-                writeRowCell(row, 3, stat.getId());
-                writeRowCell(row, 4, stat.getCreator());
-                writeRowCell(row, 5, stat.getMakespan());
-                writeRowCell(row, 7, stat.getMakespan() - record.getRecordTimeSpan());
-            } else {
+            List<SolutionStatistic> statList = stats.stream().filter(
+                    item -> item.getSize() == record.getSize()
+                            && item.getPar() == record.getPar()
+                            && item.getInst() == record.getInst()).toList();
+            if (statList.isEmpty()) {
                 writeRowCell(row, 3, "none");
+            } else {
+                writeRowCell(row, 5, statList.get(0).getMakespan());
+                writeRowCell(row, 7, statList.get(0).getMakespan() - record.getRecordTimeSpan());
+                String ids = "";
+                String creators = "";
+                for (SolutionStatistic itemStat : statList) {
+                    ids += itemStat.getId() + "; ";
+                    creators += itemStat.getCreator() + "; ";
+                }
+                writeRowCell(row, 3, ids);
+                writeRowCell(row, 4, creators);
+
             }
             writeRowCell(row, 6, record.getRecordTimeSpan());
         }
